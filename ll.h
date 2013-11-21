@@ -5,14 +5,14 @@
 
 /* Linked List (of ints) */
 typedef struct _ll_node {
-	int value;
-	struct _ll_node *next;
+    int value;
+    struct _ll_node *next;
 } ll_node;
 
 typedef struct {
-	ll_node *head;
-	ll_node *tail;
-	int length;
+    ll_node *head;
+    ll_node *tail;
+    int length;
 } linked_list;
 
 linked_list *ll_new();

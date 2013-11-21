@@ -16,11 +16,11 @@
 #include "geometry.h"
 
 typedef struct {
-	linked_list *top;
-	linked_list *bottom;
-	g_size size;
-	int spacing;
-	int max_delta;
+    linked_list *top;
+    linked_list *bottom;
+    g_size size;
+    int spacing;
+    int max_delta;
 } generator;
 
 //
@@ -32,19 +32,19 @@ typedef struct {
 // of 2 rectangles on screen.
 //
 typedef struct {
-	int x;
-	int top_height;
-	int bottom_height;
+    int x;
+    int top_height;
+    int bottom_height;
 } gen_frame;
 
 // Create a new generator and generates the first set of frames.
 //
-// @param size 		g_size structure containing the pixel width and height of the
-//					region for which the generator is creating frames for.
-// @param spacing	The fixed spacing between the top and bottom boundaries.
-//					In other words, the sum of the heights of the bottom and 
-//					top boundaries will always be equal to height - spacing.
-// @param max_d 	The maximum variation in height between one frame and the next.
+// @param size      g_size structure containing the pixel width and height of the
+//                  region for which the generator is creating frames for.
+// @param spacing   The fixed spacing between the top and bottom boundaries.
+//                  In other words, the sum of the heights of the bottom and 
+//                  top boundaries will always be equal to height - spacing.
+// @param max_d     The maximum variation in height between one frame and the next.
 //
 // @return A pointer to the newly created `generator` struct.
 //
@@ -54,8 +54,8 @@ generator * gen_new(g_size size, int spacing, int max_d);
 // and appends it to the end of the generator's frames list in order to replace
 // the one that was popped.
 //
-// @param g 		Pointer to the generator.
-// @param new_frame	Pointer to be set to the newly created frame (appended to right).
+// @param g         Pointer to the generator.
+// @param new_frame Pointer to be set to the newly created frame (appended to right).
 //
 // @return The popped generator frame.
 gen_frame gen_pop_frame(generator *g, gen_frame *new_frame);
@@ -64,8 +64,8 @@ gen_frame gen_pop_frame(generator *g, gen_frame *new_frame);
 // them as an array of gen_frame structs. The caller is responsible for freeing
 // the array afterwards.
 //
-// @param g 	Pointer to the generator.
-// @param len	Pointer to a `size_t` to be set to the length of the returned array.
+// @param g     Pointer to the generator.
+// @param len   Pointer to a `size_t` to be set to the length of the returned array.
 //
 // @return An array of `gen_frame` structs.
 gen_frame * gen_copy_frames(generator *g, size_t *len);
@@ -75,10 +75,10 @@ gen_frame * gen_copy_frames(generator *g, size_t *len);
 //
 // @param g Pointer to the generator.
 // @param r The rectangle for which to test collisions for. The origin of the
-//			is relative to the screen coordinates, meaning that the origin {0,0}
-//			is located on the top left corner of the region.
+//          is relative to the screen coordinates, meaning that the origin {0,0}
+//          is located on the top left corner of the region.
 //
-// @return 	true if a collision occurred, false otherwise.
+// @return  true if a collision occurred, false otherwise.
 boolean gen_detect_collision(generator *g, g_rect r);
 
 // Frees the generator and all associated memory.

@@ -9,18 +9,18 @@
 #define __geometry_h__
 
 typedef struct {
-	int x;
-	int y;
+    int x;
+    int y;
 } g_point;
 
 typedef struct {
-	int width;
-	int height;
+    int width;
+    int height;
 } g_size;
 
 typedef struct {
-	g_point origin;
-	g_size size;
+    g_point origin;
+    g_size size;
 } g_rect;
 
 #endif

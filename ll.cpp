@@ -2,14 +2,14 @@
 
 /* Linked List (of ints) */
 typedef struct _ll_node {
-	int value;
-	struct _ll_node *next;
+    int value;
+    struct _ll_node *next;
 } ll_node;
 
 typedef struct {
-	ll_node *head;
-	ll_node *tail;
-	int length;
+    ll_node *head;
+    ll_node *tail;
+    int length;
 } linked_list;
 
 /* ll_new
@@ -18,11 +18,11 @@ typedef struct {
  */
  linked_list *ll_new()
  {
- 	linked_list *list = (linked_list *) malloc(sizeof(linked_list));
- 	list->head = NULL;
- 	list->tail = NULL;
- 	list->length = 0;
- 	return list;
+    linked_list *list = (linked_list *) malloc(sizeof(linked_list));
+    list->head = NULL;
+    list->tail = NULL;
+    list->length = 0;
+    return list;
  }
 
 /* ll_length
@@ -31,7 +31,7 @@ typedef struct {
  */
  int ll_length(linked_list *list)
  {
- 	return list->length;
+    return list->length;
  }
 
 /* ll_prepend
@@ -40,16 +40,16 @@ typedef struct {
  */
  void ll_prepend(linked_list *list, int x)
  {
- 	ll_node *node = (ll_node *) malloc(sizeof(ll_node));
- 	node->value = x;
- 	node->next = list->head;
- 	list->head = node;
- 	
- 	list->length++;
+    ll_node *node = (ll_node *) malloc(sizeof(ll_node));
+    node->value = x;
+    node->next = list->head;
+    list->head = node;
+    
+    list->length++;
 
- 	if (list->tail == NULL) {
- 		list->tail = node;
- 	}
+    if (list->tail == NULL) {
+        list->tail = node;
+    }
  }
 
 /* ll_append
@@ -58,19 +58,19 @@ typedef struct {
  */
  void ll_append(linked_list *list, int x)
  {
- 	ll_node *node = (ll_node *) malloc(sizeof(ll_node));
- 	node->value = x;
- 	node->next = NULL;
+    ll_node *node = (ll_node *) malloc(sizeof(ll_node));
+    node->value = x;
+    node->next = NULL;
 
- 	if (list->tail == NULL) {
- 		list->head = node;
- 		list->tail = node;
- 	} else {
- 		list->tail->next = node;
- 		list->tail = node;
- 	}
- 	
- 	list->length++;
+    if (list->tail == NULL) {
+        list->head = node;
+        list->tail = node;
+    } else {
+        list->tail->next = node;
+        list->tail = node;
+    }
+    
+    list->length++;
  }
 
 /* ll_pop_front
@@ -80,19 +80,19 @@ typedef struct {
  */
  int ll_pop_front(linked_list *list)
  {
- 	int rv = list->head->value;
+    int rv = list->head->value;
 
- 	ll_node *tmp = list->head;
- 	list->head = list->head->next;
- 	free(tmp);
+    ll_node *tmp = list->head;
+    list->head = list->head->next;
+    free(tmp);
 
- 	if (list->head == NULL) {
- 		list->tail = NULL;
- 	}
+    if (list->head == NULL) {
+        list->tail = NULL;
+    }
 
- 	list->length--;
+    list->length--;
 
- 	return rv;
+    return rv;
  }
 
 /* Exercise 7 */
@@ -107,13 +107,13 @@ typedef struct {
  */
  int ll_lookup(linked_list *list, int index)
  {
- 	ll_node *n = list->head;
+    ll_node *n = list->head;
 
- 	for (int i=0; i<index; i++) {
- 		n = n->next;
- 	}
- 	
- 	return n->value;
+    for (int i=0; i<index; i++) {
+        n = n->next;
+    }
+    
+    return n->value;
  }
 
 /* ll_free
@@ -122,9 +122,9 @@ typedef struct {
  */
  void ll_free(linked_list *list)
  {
- 	while (list->tail != NULL) {
- 		ll_pop_front(list);
- 	}
+    while (list->tail != NULL) {
+        ll_pop_front(list);
+    }
 
- 	free(list);
+    free(list);
  }
