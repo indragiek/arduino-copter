@@ -20,18 +20,20 @@ void scene_initial_draw(scene *s);
 //
 void scene_redraw(scene *s, gen_frame *new_frames);
 
-// =========== Constants ============
+// =========== Macros ============
 
-#define TERRAIN_COLOR       ST7735_GREEN
-#define BACKGROUND_COLOR    ST7735_BLACK
+// Convenience macros for pulling colors out of a passed in `scene` struct.
+#define COL_TER(s)      s->colors.terrain
+#define COL_BG(s)       s->colors.background
 
 // =========== Public API ============
 // All Public APIs are documented in scene.h
 
-scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d) {
+scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d, scene_colors colors) {
     // Create the scene structure and draw the initial scene.
     scene *s = (scene *)malloc(sizeof(scene));
     s->tft = tft;
+    s->colors = colors;
     g_size size = {tft->width(), tft->height()};
     s->gen = gen_new(size, spacing, max_d);
     scene_initial_draw(s);
@@ -65,6 +67,12 @@ void scene_update(scene *s, copter_direction dir) {
     s->frames = frames;
 }
 
+void scene_free(scene *s) {
+    free(s->frames);
+    gen_free(s->gen);
+    free(s);
+}
+
 // =========== Private API ============
 
 void scene_redraw(scene *s, gen_frame *new_frames) {
@@ -83,9 +91,9 @@ void scene_redraw(scene *s, gen_frame *new_frames) {
         // Fill or erase pixels from the top boundary depending on the
         // change in height (delta).
         if (delta > 0) {
-            tft->fillRect(x, old_height, 1, delta, TERRAIN_COLOR);
+            tft->fillRect(x, old_height, 1, delta, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(x, old_height + delta, 1, -delta, BACKGROUND_COLOR);
+            tft->fillRect(x, old_height + delta, 1, -delta, COL_BG(s));
         }
 
         // Same for the bottom boundary.
@@ -95,22 +103,22 @@ void scene_redraw(scene *s, gen_frame *new_frames) {
 
         int gen_height = s->gen->size.height;
         if (delta > 0) {
-            tft->fillRect(x, gen_height - old_height - delta, 1, delta, TERRAIN_COLOR);
+            tft->fillRect(x, gen_height - old_height - delta, 1, delta, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(x, gen_height - old_height, 1, -delta, BACKGROUND_COLOR);
+            tft->fillRect(x, gen_height - old_height, 1, -delta, COL_BG(s));
         }
     }
 }
 
 void scene_initial_draw(scene *s) {
     Adafruit_ST7735 *tft = s->tft;
-    tft->fillScreen(BACKGROUND_COLOR);
+    tft->fillScreen(COL_BG(s));
     size_t len;
     gen_frame *frames = gen_copy_frames(s->gen, &len);
     for (int i = 0; i < len; i++) {
         gen_frame frame = frames[i];
-        tft->fillRect(frame.x, 0, 1, frame.top_height, TERRAIN_COLOR);
-        tft->fillRect(frame.x, s->gen->size.height - frame.bottom_height, 1, frame.bottom_height, TERRAIN_COLOR);
+        tft->fillRect(frame.x, 0, 1, frame.top_height, COL_TER(s));
+        tft->fillRect(frame.x, s->gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
     }
     s->frames = frames;
     s->num_frames = len;

@@ -17,10 +17,16 @@
 #include "generator.h"
 
 typedef struct {
+	int background;
+	int terrain;
+} scene_colors;
+
+typedef struct {
     Adafruit_ST7735 *tft;
     generator *gen;
     gen_frame *frames;
     size_t num_frames;
+    scene_colors colors;
 } scene;
 
 typedef enum {
@@ -35,10 +41,12 @@ typedef enum {
 //                  In other words, the sum of the heights of the bottom and 
 //                  top boundaries will always be equal to height - spacing.
 // @param max_d     The maximum variation in height between one frame and the next.
+// @param colors 	`scene_color` struct containing the colors used for drawing the
+//					scene (background, terrain, etc.)
 //
 // @return A pointer to the newly created `scene` struct.
 //
-scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d);
+scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d, scene_colors colors);
 
 // Updates the scene by drawing the next frame.
 //
@@ -46,5 +54,11 @@ scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d);
 // @param dir   Movement direction of the helicopter (`copter_up` or `copter_down`).
 //
 void scene_update(scene *s, copter_direction dir);
+
+// Frees all memory associated with the scene.
+//
+// @param s Pointer to the `scene` to free.
+//
+void scene_free(scene *s);
 
 #endif
