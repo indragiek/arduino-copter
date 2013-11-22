@@ -82,16 +82,15 @@ void scene_redraw(scene *s, gen_frame *new_frames) {
         int old_height = old_frame.top_height;
         int new_height = new_frame.top_height;
         int delta = new_height - old_height;
-        int x = old_frame.x;
 
         Adafruit_ST7735 *tft = s->tft;
 
         // Fill or erase pixels from the top boundary depending on the
         // change in height (delta).
         if (delta > 0) {
-            tft->fillRect(x, old_height, 1, delta, COL_TER(s));
+            tft->fillRect(i, old_height, 1, delta, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(x, old_height + delta, 1, -delta, COL_BG(s));
+            tft->fillRect(i, old_height + delta, 1, -delta, COL_BG(s));
         }
 
         // Same for the bottom boundary.
@@ -101,9 +100,9 @@ void scene_redraw(scene *s, gen_frame *new_frames) {
 
         int gen_height = s->gen->size.height;
         if (delta > 0) {
-            tft->fillRect(x, gen_height - old_height - delta, 1, delta, COL_TER(s));
+            tft->fillRect(i, gen_height - old_height - delta, 1, delta, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(x, gen_height - old_height, 1, -delta, COL_BG(s));
+            tft->fillRect(i, gen_height - old_height, 1, -delta, COL_BG(s));
         }
     }
 }
@@ -115,8 +114,8 @@ void scene_initial_draw(scene *s) {
     gen_frame *frames = gen_copy_frames(s->gen, &len);
     for (int i = 0; i < len; i++) {
         gen_frame frame = frames[i];
-        tft->fillRect(frame.x, 0, 1, frame.top_height, COL_TER(s));
-        tft->fillRect(frame.x, s->gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
+        tft->fillRect(i, 0, 1, frame.top_height, COL_TER(s));
+        tft->fillRect(i, s->gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
     }
     s->frames = frames;
     s->num_frames = len;

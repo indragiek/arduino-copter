@@ -32,7 +32,6 @@ typedef struct {
 // of 2 rectangles on screen.
 //
 typedef struct {
-    int x;
     int top_height;
     int bottom_height;
 } gen_frame;

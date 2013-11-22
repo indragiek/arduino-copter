@@ -62,7 +62,6 @@ gen_frame gen_pop_frame(generator *g, gen_frame *new_frame) {
     // Pop the left most frame and generate a new frame to append
     // to the end of the generator's frame list.
     gen_frame f;
-    f.x = 0;
     f.top_height = ll_pop_front(g->top);
     f.bottom_height = ll_pop_front(g->bottom);
     gen_frame f_new = gen_generate_next_frame(g);
@@ -108,7 +107,6 @@ gen_frame gen_generate_next_frame(generator *g) {
         // If this is the first frame in the generator, start it off at the
         // "median" position, ie. equivalent sized boundaries on top and bottom.
         int half_max = (g->size.height - g->spacing) / 2;
-        f.x = 0;
         f.top_height = half_max;
         f.bottom_height = half_max;
     }
@@ -128,7 +126,6 @@ int gen_length(generator *g) {
 
 gen_frame gen_lookup(generator *g, int x) {
     gen_frame f;
-    f.x = x;
     f.top_height = ll_lookup(g->top, x);
     f.bottom_height = ll_lookup(g->bottom, x);
     return f;
