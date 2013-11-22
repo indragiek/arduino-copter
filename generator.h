@@ -12,29 +12,27 @@
 #ifndef __generator_h__
 #define __generator_h__
 
-#include "ll.h"
 #include "geometry.h"
 
-typedef struct {
-    linked_list *top;
-    linked_list *bottom;
-    g_size size;
-    int spacing;
-    int max_delta;
-} generator;
-
-//
 // A `gen_frame` (generator frame) constitutes a single "frame" of the
 // randomly generated terrain sequence. A frame represents a section of
 // the terrain that is 1 pixel wide. Each frame contains the `x` coordinate
 // of where the frame is located, and the heights of the top and bottom
 // boundaries. These values are used directly to draw the frame as a pair
 // of 2 rectangles on screen.
-//
 typedef struct {
     int top_height;
     int bottom_height;
 } gen_frame;
+
+
+typedef struct {
+    gen_frame *frames; // Array of `gen_frame` structs
+    size_t num_frames; // The length of `frames`
+    g_size size;       // The pixel width and height of the drawing region.
+    int spacing;       // Fixed spacing between top and bottom boundaries.
+    int max_delta;     // Maximum height delta between frames.
+} generator;
 
 // Create a new generator and generates the first set of frames.
 //
@@ -59,16 +57,6 @@ generator * gen_new(g_size size, int spacing, int max_d);
 // @return The popped generator frame.
 gen_frame gen_pop_frame(generator *g, gen_frame *new_frame);
 
-// Copies all the frames of the generator in its current state and returns
-// them as an array of gen_frame structs. The caller is responsible for freeing
-// the array afterwards.
-//
-// @param g     Pointer to the generator.
-// @param len   Pointer to a `size_t` to be set to the length of the returned array.
-//
-// @return An array of `gen_frame` structs.
-gen_frame * gen_copy_frames(generator *g, size_t *len);
-
 // Detects a collision between an object located in an arbitrary rectangle and
 // the top or bottom boundaries of the terrain. 
 //
@@ -79,11 +67,5 @@ gen_frame * gen_copy_frames(generator *g, size_t *len);
 //
 // @return  true if a collision occurred, false otherwise.
 boolean gen_detect_collision(generator *g, g_rect r);
-
-// Frees the generator and all associated memory.
-//
-// @param g Pointer to the generator.
-//
-void gen_free(generator *g);
 
 #endif

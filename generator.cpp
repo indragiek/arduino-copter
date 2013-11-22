@@ -6,28 +6,12 @@
 #include <Arduino.h>
 #include "generator.h"
 
-// Generates and appends a new frame.
+// Generates and returns a new frame.
 //
 // @param g Pointer to the generator.
 //
 // @return The newly created frame.
 gen_frame gen_generate_next_frame(generator *g);
-
-// Returns the number of generated frames.
-//
-// @param g Pointer to the generator.
-int gen_length(generator *g);
-
-// Lookup a particular generator frame without popping it.
-//
-// @param g Pointer to the generator.
-// @param x The x position of the frame to lookup, relative to screen coords.
-//
-// @warning Calling this function for a nonexistent frame index will result
-// in undefined behaviour.
-//
-// @return The generator frame.
-gen_frame gen_lookup(generator *g, int x);
 
 // Detects whether an object inside a rectangle specified in screen
 // coordinates is colliding with the terrain boundaries.
@@ -45,14 +29,15 @@ boolean gen_detect_frame_collision(generator *g, int x, int y, int h);
 
 generator * gen_new(g_size size, int spacing, int max_d) {
     generator *g = (generator *)malloc(sizeof(generator));
-    g->top = ll_new();
-    g->bottom = ll_new();
     g->size = size;
     g->spacing = spacing;
     g->max_delta = max_d;
+    g->num_frames = 0;
+    g->frames = (gen_frame *)malloc(size.width * sizeof(gen_frame));
 
     for (int i = 0; i < size.width; i++) {
-        gen_generate_next_frame(g);
+        g->frames[i] = gen_generate_next_frame(g);
+        g->num_frames++;
     }
 
     return g;
@@ -61,30 +46,16 @@ generator * gen_new(g_size size, int spacing, int max_d) {
 gen_frame gen_pop_frame(generator *g, gen_frame *new_frame) {
     // Pop the left most frame and generate a new frame to append
     // to the end of the generator's frame list.
-    gen_frame f;
-    f.top_height = ll_pop_front(g->top);
-    f.bottom_height = ll_pop_front(g->bottom);
+    gen_frame *frames = g->frames;
+    gen_frame f = frames[0];
+    size_t len = g->num_frames;
+    for (int i = 1; i < len; i++) {
+        frames[i - 1] = frames[i];
+    }
     gen_frame f_new = gen_generate_next_frame(g);
+    frames[len - 1] = f_new;
     if (new_frame) *new_frame = f_new;
     return f;
-}
-
-gen_frame * gen_copy_frames(generator *g, size_t *len) {
-    int g_len = gen_length(g);
-    if (g_len == 0) return NULL;
-    if (len) *len = g_len;
-
-    gen_frame *a = (gen_frame *)calloc(g_len, sizeof(gen_frame));
-    for (int i = 0; i < g_len; i++) {
-        a[i] = gen_lookup(g, i);
-    }
-    return a;
-}
-
-void gen_free(generator *g) {
-    ll_free(g->top);
-    ll_free(g->bottom);
-    free(g);
 }
 
 boolean gen_detect_collision(generator *g, g_rect r) {
@@ -100,9 +71,9 @@ boolean gen_detect_collision(generator *g, g_rect r) {
 
 gen_frame gen_generate_next_frame(generator *g) {
     gen_frame f;
-    int len = gen_length(g);
+    size_t len = g->num_frames;
     if (len > 0) {
-        f = gen_lookup(g, len - 1);
+        f = g->frames[len - 1];
     } else {
         // If this is the first frame in the generator, start it off at the
         // "median" position, ie. equivalent sized boundaries on top and bottom.
@@ -115,23 +86,10 @@ gen_frame gen_generate_next_frame(generator *g) {
     int d = random(-max_d, max_d + 1);
     f.top_height += d;
     f.bottom_height -= d;
-    ll_append(g->top, f.top_height);
-    ll_append(g->bottom, f.bottom_height);
-    return f;
-}
-
-int gen_length(generator *g) {
-    return g->top->length;
-}
-
-gen_frame gen_lookup(generator *g, int x) {
-    gen_frame f;
-    f.top_height = ll_lookup(g->top, x);
-    f.bottom_height = ll_lookup(g->bottom, x);
     return f;
 }
 
 boolean gen_detect_frame_collision(generator *g, int x, int y, int h) {
-    gen_frame f = gen_lookup(g, x);
+    gen_frame f = g->frames[x];
     return (y <= f.top_height) || ((y + h) >= (g->size.height - f.bottom_height));
 }

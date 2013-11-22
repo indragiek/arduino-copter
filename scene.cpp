@@ -67,7 +67,6 @@ void scene_update(scene *s, copter_direction dir) {
 
 void scene_free(scene *s) {
     free(s->frames);
-    gen_free(s->gen);
     free(s);
 }
 
@@ -110,13 +109,19 @@ void scene_redraw(scene *s, gen_frame *new_frames) {
 void scene_initial_draw(scene *s) {
     Adafruit_ST7735 *tft = s->tft;
     tft->fillScreen(COL_BG(s));
-    size_t len;
-    gen_frame *frames = gen_copy_frames(s->gen, &len);
+
+    generator *gen = s->gen;
+    size_t len = gen->num_frames;
+    size_t bytes = len * sizeof(gen_frame);
+    gen_frame *frames = (gen_frame *)malloc(bytes);
+    memcpy(gen->frames, frames, bytes);
+
     for (int i = 0; i < len; i++) {
         gen_frame frame = frames[i];
         tft->fillRect(i, 0, 1, frame.top_height, COL_TER(s));
-        tft->fillRect(i, s->gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
+        tft->fillRect(i, gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
     }
+
     s->frames = frames;
     s->num_frames = len;
 }
