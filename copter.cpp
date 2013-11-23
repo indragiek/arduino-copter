@@ -23,7 +23,7 @@ void setup() {
 	colors.terrain = ST7735_GREEN;
 	colors.background = ST7735_BLACK;
 
-	s = scene_new(&tft, 100, 5, colors);
+	s = scene_new(&tft, 100, 1, colors);
 }
 
 void loop() {
