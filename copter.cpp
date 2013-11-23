@@ -2,6 +2,7 @@
 #include <Adafruit_ST7735.h> // Hardware-specific library
 #include <Adafruit_GFX.h>    // Core graphics library
 #include "scene.h"
+#include "geometry.h"
 
 // Display pins:
 // standard U of A library settings, assuming Atmel Mega SPI pins
@@ -22,10 +23,14 @@ void setup() {
 	scene_colors colors;
 	colors.terrain = ST7735_GREEN;
 	colors.background = ST7735_BLACK;
+	colors.blocks = ST7735_YELLOW;
 
-	s = scene_new(&tft, 100, 1, colors);
+	s = scene_new(&tft, 100, 1, 125, (g_size){10, 25}, colors);
+	while (1) {
+		scene_update(s, copter_up);
+	}
 }
 
 void loop() {
-    scene_update(s, copter_up);
+
 }

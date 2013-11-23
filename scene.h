@@ -15,18 +15,25 @@
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library
 #include "generator.h"
+#include "geometry.h"
 
 typedef struct {
-	int background;
-	int terrain;
+	int background; // Color of the background of the game.
+	int terrain;	// Color of the terrain on the top and bottom.
+	int blocks;		// Color of the obstable blocks.
 } scene_colors;
 
 typedef struct {
-    Adafruit_ST7735 *tft;
-    generator *gen;
-    gen_frame *frames;
-    size_t num_frames;
-    scene_colors colors;
+    Adafruit_ST7735 *tft; 	// Display being drawn into.
+    generator *gen;			// Terrain generator.
+    gen_frame *frames;		// Array of generator frames visible on screen.
+    size_t num_frames;		// Length of `frames` array.
+    g_rect *block_rects;	// Array of block rectangles for the obstacle blocks.
+    size_t num_blocks;		// Number of blocks present (or upcoming) on screen.
+    int last_block_d;		// Distance passed since the last block was inserted.
+    int max_block_d;		// Distance between obstacle blocks.
+    g_size block_size;		// Size of obstacle blocks.
+    scene_colors colors;	// Color definitions.
 } scene;
 
 typedef enum {
@@ -41,12 +48,19 @@ typedef enum {
 //                  In other words, the sum of the heights of the bottom and 
 //                  top boundaries will always be equal to height - spacing.
 // @param max_d     The maximum variation in height between one frame and the next.
+// @param blk_d		Distance between obstable blocks.
+// @param blk_size	Size of obstacle blocks.
 // @param colors 	`scene_color` struct containing the colors used for drawing the
 //					scene (background, terrain, etc.)
 //
 // @return A pointer to the newly created `scene` struct.
 //
-scene * scene_new(Adafruit_ST7735 *tft, int spacing, int max_d, scene_colors colors);
+scene * scene_new(Adafruit_ST7735 *tft, 
+	              int spacing, 
+	              int max_d, 
+	              int blk_d, 
+	              g_size blk_size,
+	              scene_colors colors);
 
 // Updates the scene by drawing the next frame.
 //
