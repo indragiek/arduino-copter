@@ -83,7 +83,7 @@ gen_frame gen_generate_next_frame(generator *g) {
     }
 
     int max_d = g->max_delta;
-    int d = random(-max_d, max_d + 1);
+    int d = random(max(-f.top_height, -max_d), min(f.bottom_height, max_d) + 1);
     f.top_height += d;
     f.bottom_height -= d;
     return f;
