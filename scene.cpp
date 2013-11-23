@@ -114,7 +114,7 @@ void scene_initial_draw(scene *s) {
     size_t len = gen->num_frames;
     size_t bytes = len * sizeof(gen_frame);
     gen_frame *frames = (gen_frame *)malloc(bytes);
-    memcpy(gen->frames, frames, bytes);
+    memcpy(frames, gen->frames, bytes);
 
     for (int i = 0; i < len; i++) {
         gen_frame frame = frames[i];
