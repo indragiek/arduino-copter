@@ -1,25 +1,73 @@
-#include <Arduino.h>
-#include <Adafruit_ST7735.h> // Hardware-specific library
-#include <Adafruit_GFX.h>    // Core graphics library
 #include "scene.h"
-#include "geometry.h"
 
-// Display pins:
-// standard U of A library settings, assuming Atmel Mega SPI pins
-#define SD_CS 5 // Chip select line for SD card
-#define TFT_CS 6 // Chip select line for TFT display
-#define TFT_DC 7 // Data/command line for TFT
-#define TFT_RST 8 // Reset line for TFT (or connect to +5V)
+// =========== Pin Configuration ============
 
-// TFT Display
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-scene *s;
+// SD Card and TFT Display
+const int SD_CS 	= 5;
+const int TFT_CS 	= 6;
+const int TFT_DC	= 7;
+const int TFT_RST	= 8;
+
+// Buttons
+const int BTN 		= 9;
+
+// =========== Global Variables ============
+
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); // TFT Display
+scene *s; // Main scene
+
+// =========== Function Definitions ============ 
+
+// Shows the introduction screen with the game title, etc.
+void show_intro();
+
+// Runs the Copter game until the player loses.
+void run_game();
+
+// =========== Function Implementations ============
 
 void setup() {
-	randomSeed(analogRead(0));
 	Serial.begin(9600);
-	// Initialize TFT
+	randomSeed(analogRead(0));
 	tft.initR(INITR_BLACKTAB);
+	pinMode(BTN, INPUT);	
+	digitalWrite(BTN, HIGH);
+
+	show_intro();
+	run_game();
+}
+
+void show_intro() {
+	tft.fillScreen(ST7735_BLACK);
+
+	// Draw the game title "Copter"
+	tft.setCursor(12, 40);
+	tft.setTextSize(3);
+	tft.setTextWrap(true);
+	tft.print("Copter");
+
+	// Draw the author's names
+	tft.setCursor(12, 80);
+	tft.setTextSize(1);
+	tft.print("By Indragie Karuna\n  ratne & Jiawei Wu");
+
+	// Draw the flashing "press button" text until
+	// the user pushes the button.
+	boolean visible = true;
+	while (digitalRead(BTN) == HIGH) {
+		if (visible) {
+			tft.setCursor(20, 120);
+			tft.setTextColor(ST7735_GREEN);
+			tft.print("Press button to\n        begin.");
+		} else {
+			tft.fillRect(20, 120, 108, 40, ST7735_BLACK);
+		}
+		visible = !visible;
+		delay(700);
+	}
+}
+
+void run_game() {
 	scene_colors colors;
 	colors.terrain = ST7735_GREEN;
 	colors.background = ST7735_BLACK;
@@ -31,6 +79,4 @@ void setup() {
 	}
 }
 
-void loop() {
-
-}
+void loop() {}
