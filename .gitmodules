@@ -1,0 +1,3 @@
+[submodule "ios/External/BLE"]
+	path = ios/External/BLE
+	url = https://github.com/RedBearLab/iOS
