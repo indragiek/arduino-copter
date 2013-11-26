@@ -49,7 +49,7 @@ void show_intro() {
 	// Draw the author's names
 	tft.setCursor(12, 80);
 	tft.setTextSize(1);
-	tft.print("By Indragie Karuna\n  ratne");
+	tft.print("By Indragie Karuna\n  ratne & Jiawei Wu");
 
 	// Draw the flashing "press button" text until
 	// the user pushes the button.
