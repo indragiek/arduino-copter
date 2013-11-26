@@ -1,0 +1,476 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03D280BA1844F30B002498FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280B91844F30B002498FF /* Foundation.framework */; };
+		03D280BC1844F30B002498FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BB1844F30B002498FF /* CoreGraphics.framework */; };
+		03D280BE1844F30B002498FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BD1844F30B002498FF /* UIKit.framework */; };
+		03D280C41844F30B002498FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03D280C21844F30B002498FF /* InfoPlist.strings */; };
+		03D280C61844F30B002498FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280C51844F30B002498FF /* main.m */; };
+		03D280CA1844F30B002498FF /* CPTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280C91844F30B002498FF /* CPTAppDelegate.m */; };
+		03D280CD1844F30B002498FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03D280CB1844F30B002498FF /* Main.storyboard */; };
+		03D280D01844F30B002498FF /* CPTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280CF1844F30B002498FF /* CPTViewController.m */; };
+		03D280D21844F30B002498FF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03D280D11844F30B002498FF /* Images.xcassets */; };
+		03D280D91844F30B002498FF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280D81844F30B002498FF /* XCTest.framework */; };
+		03D280DA1844F30B002498FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280B91844F30B002498FF /* Foundation.framework */; };
+		03D280DB1844F30B002498FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BD1844F30B002498FF /* UIKit.framework */; };
+		03D280E31844F30B002498FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03D280E11844F30B002498FF /* InfoPlist.strings */; };
+		03D280E51844F30B002498FF /* CopterControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280E41844F30B002498FF /* CopterControlTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		03D280DC1844F30B002498FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03D280AE1844F30B002498FF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03D280B51844F30B002498FF;
+			remoteInfo = CopterControl;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		03D280B61844F30B002498FF /* CopterControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopterControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03D280B91844F30B002498FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		03D280BB1844F30B002498FF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		03D280BD1844F30B002498FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		03D280C11844F30B002498FF /* CopterControl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CopterControl-Info.plist"; sourceTree = "<group>"; };
+		03D280C31844F30B002498FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		03D280C51844F30B002498FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		03D280C71844F30B002498FF /* CopterControl-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CopterControl-Prefix.pch"; sourceTree = "<group>"; };
+		03D280C81844F30B002498FF /* CPTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPTAppDelegate.h; sourceTree = "<group>"; };
+		03D280C91844F30B002498FF /* CPTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPTAppDelegate.m; sourceTree = "<group>"; };
+		03D280CC1844F30B002498FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		03D280CE1844F30B002498FF /* CPTViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPTViewController.h; sourceTree = "<group>"; };
+		03D280CF1844F30B002498FF /* CPTViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPTViewController.m; sourceTree = "<group>"; };
+		03D280D11844F30B002498FF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		03D280D71844F30B002498FF /* CopterControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CopterControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03D280D81844F30B002498FF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		03D280E01844F30B002498FF /* CopterControlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CopterControlTests-Info.plist"; sourceTree = "<group>"; };
+		03D280E21844F30B002498FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		03D280E41844F30B002498FF /* CopterControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CopterControlTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		03D280B31844F30B002498FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280BC1844F30B002498FF /* CoreGraphics.framework in Frameworks */,
+				03D280BE1844F30B002498FF /* UIKit.framework in Frameworks */,
+				03D280BA1844F30B002498FF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03D280D41844F30B002498FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280D91844F30B002498FF /* XCTest.framework in Frameworks */,
+				03D280DB1844F30B002498FF /* UIKit.framework in Frameworks */,
+				03D280DA1844F30B002498FF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03D280AD1844F30B002498FF = {
+			isa = PBXGroup;
+			children = (
+				03D280BF1844F30B002498FF /* CopterControl */,
+				03D280DE1844F30B002498FF /* CopterControlTests */,
+				03D280B81844F30B002498FF /* Frameworks */,
+				03D280B71844F30B002498FF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		03D280B71844F30B002498FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03D280B61844F30B002498FF /* CopterControl.app */,
+				03D280D71844F30B002498FF /* CopterControlTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		03D280B81844F30B002498FF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03D280B91844F30B002498FF /* Foundation.framework */,
+				03D280BB1844F30B002498FF /* CoreGraphics.framework */,
+				03D280BD1844F30B002498FF /* UIKit.framework */,
+				03D280D81844F30B002498FF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03D280BF1844F30B002498FF /* CopterControl */ = {
+			isa = PBXGroup;
+			children = (
+				03D280C81844F30B002498FF /* CPTAppDelegate.h */,
+				03D280C91844F30B002498FF /* CPTAppDelegate.m */,
+				03D280CB1844F30B002498FF /* Main.storyboard */,
+				03D280CE1844F30B002498FF /* CPTViewController.h */,
+				03D280CF1844F30B002498FF /* CPTViewController.m */,
+				03D280D11844F30B002498FF /* Images.xcassets */,
+				03D280C01844F30B002498FF /* Supporting Files */,
+			);
+			path = CopterControl;
+			sourceTree = "<group>";
+		};
+		03D280C01844F30B002498FF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03D280C11844F30B002498FF /* CopterControl-Info.plist */,
+				03D280C21844F30B002498FF /* InfoPlist.strings */,
+				03D280C51844F30B002498FF /* main.m */,
+				03D280C71844F30B002498FF /* CopterControl-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03D280DE1844F30B002498FF /* CopterControlTests */ = {
+			isa = PBXGroup;
+			children = (
+				03D280E41844F30B002498FF /* CopterControlTests.m */,
+				03D280DF1844F30B002498FF /* Supporting Files */,
+			);
+			path = CopterControlTests;
+			sourceTree = "<group>";
+		};
+		03D280DF1844F30B002498FF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03D280E01844F30B002498FF /* CopterControlTests-Info.plist */,
+				03D280E11844F30B002498FF /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		03D280B51844F30B002498FF /* CopterControl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03D280E81844F30B002498FF /* Build configuration list for PBXNativeTarget "CopterControl" */;
+			buildPhases = (
+				03D280B21844F30B002498FF /* Sources */,
+				03D280B31844F30B002498FF /* Frameworks */,
+				03D280B41844F30B002498FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CopterControl;
+			productName = CopterControl;
+			productReference = 03D280B61844F30B002498FF /* CopterControl.app */;
+			productType = "com.apple.product-type.application";
+		};
+		03D280D61844F30B002498FF /* CopterControlTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03D280EB1844F30B002498FF /* Build configuration list for PBXNativeTarget "CopterControlTests" */;
+			buildPhases = (
+				03D280D31844F30B002498FF /* Sources */,
+				03D280D41844F30B002498FF /* Frameworks */,
+				03D280D51844F30B002498FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				03D280DD1844F30B002498FF /* PBXTargetDependency */,
+			);
+			name = CopterControlTests;
+			productName = CopterControlTests;
+			productReference = 03D280D71844F30B002498FF /* CopterControlTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		03D280AE1844F30B002498FF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CPT;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Indragie Karunaratne";
+				TargetAttributes = {
+					03D280D61844F30B002498FF = {
+						TestTargetID = 03D280B51844F30B002498FF;
+					};
+				};
+			};
+			buildConfigurationList = 03D280B11844F30B002498FF /* Build configuration list for PBXProject "CopterControl" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 03D280AD1844F30B002498FF;
+			productRefGroup = 03D280B71844F30B002498FF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				03D280B51844F30B002498FF /* CopterControl */,
+				03D280D61844F30B002498FF /* CopterControlTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		03D280B41844F30B002498FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280D21844F30B002498FF /* Images.xcassets in Resources */,
+				03D280C41844F30B002498FF /* InfoPlist.strings in Resources */,
+				03D280CD1844F30B002498FF /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03D280D51844F30B002498FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280E31844F30B002498FF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		03D280B21844F30B002498FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280CA1844F30B002498FF /* CPTAppDelegate.m in Sources */,
+				03D280C61844F30B002498FF /* main.m in Sources */,
+				03D280D01844F30B002498FF /* CPTViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03D280D31844F30B002498FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03D280E51844F30B002498FF /* CopterControlTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		03D280DD1844F30B002498FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03D280B51844F30B002498FF /* CopterControl */;
+			targetProxy = 03D280DC1844F30B002498FF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		03D280C21844F30B002498FF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03D280C31844F30B002498FF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		03D280CB1844F30B002498FF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03D280CC1844F30B002498FF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		03D280E11844F30B002498FF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03D280E21844F30B002498FF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		03D280E61844F30B002498FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		03D280E71844F30B002498FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		03D280E91844F30B002498FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CopterControl/CopterControl-Prefix.pch";
+				INFOPLIST_FILE = "CopterControl/CopterControl-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		03D280EA1844F30B002498FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CopterControl/CopterControl-Prefix.pch";
+				INFOPLIST_FILE = "CopterControl/CopterControl-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		03D280EC1844F30B002498FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CopterControl.app/CopterControl";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CopterControl/CopterControl-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "CopterControlTests/CopterControlTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		03D280ED1844F30B002498FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CopterControl.app/CopterControl";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CopterControl/CopterControl-Prefix.pch";
+				INFOPLIST_FILE = "CopterControlTests/CopterControlTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03D280B11844F30B002498FF /* Build configuration list for PBXProject "CopterControl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03D280E61844F30B002498FF /* Debug */,
+				03D280E71844F30B002498FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03D280E81844F30B002498FF /* Build configuration list for PBXNativeTarget "CopterControl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03D280E91844F30B002498FF /* Debug */,
+				03D280EA1844F30B002498FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		03D280EB1844F30B002498FF /* Build configuration list for PBXNativeTarget "CopterControlTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03D280EC1844F30B002498FF /* Debug */,
+				03D280ED1844F30B002498FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 03D280AE1844F30B002498FF /* Project object */;
+}

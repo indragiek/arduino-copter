@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4BD1FF6E-E39E-4D66-926F-2B0D1AEA6107</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CopterControl</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>326E2E1B-D0C1-41A2-98E7-D08625FDBD88</key>
+		<string>ssh://github.com/indragiek/arduino-copter.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ios/CopterControl/CopterControl.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>326E2E1B-D0C1-41A2-98E7-D08625FDBD88</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/indragiek/arduino-copter.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>326E2E1B-D0C1-41A2-98E7-D08625FDBD88</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>326E2E1B-D0C1-41A2-98E7-D08625FDBD88</string>
+			<key>IDESourceControlWCCName</key>
+			<string>copter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
