@@ -7,15 +7,13 @@
 //
 
 #import "CPTViewController.h"
-
-#define CPTViewBackgroundColor	[UIColor colorWithRed:0.14 green:0.14 blue:0.16 alpha:1.0]
-#define CPTViewScoreFont		[UIFont fontWithName:@"DBLCDTempBlack" size:24.f]
-#define CPTViewScoreTextColor	[UIColor colorWithRed:0.27 green:1.00 blue:0.08 alpha:1.0]
-#define CPTViewHiScoreTextColor	[UIColor colorWithRed:0.24 green:0.58 blue:0.88 alpha:1.0]
+#import "SVProgressHUD.h"
 
 @interface CPTViewController ()
 @property (nonatomic, weak) IBOutlet UILabel *scoreLabel;
 @property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
+@property (nonatomic, weak) IBOutlet UIView *scoreHeaderView;
+@property (nonatomic, weak) IBOutlet UIView *highScoreHeaderView;
 - (IBAction)buttonDown:(id)sender;
 - (IBAction)buttonUp:(id)sender;
 - (IBAction)playPause:(id)sender;
@@ -26,14 +24,41 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	self.view.backgroundColor = CPTViewBackgroundColor;
-	self.scoreLabel.font = CPTViewScoreFont;
-	self.highScoreLabel.font = CPTViewScoreFont;
-	self.scoreLabel.textColor = CPTViewScoreTextColor;
-	self.highScoreLabel.textColor = CPTViewHiScoreTextColor;
-	
-	self.scoreLabel.text = @"1026";
+	self.view.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
+	self.scoreLabel.text = @"6026";
 	self.highScoreLabel.text = @"11230";
+
+	// Defer to next iteration of the run loop.
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self scanBluetoothDevices];
+	});
+}
+
+- (void)scanBluetoothDevices
+{
+	[SVProgressHUD showWithStatus:@"Scanning for Devices" maskType:SVProgressHUDMaskTypeGradient];
+	double delayInSeconds = 2.0;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		//[SVProgressHUD dismiss];
+		//[self showBluetoothDeviceNotFoundAlert];
+		[SVProgressHUD showSuccessWithStatus:@"Found device"];
+	});
+}
+
+- (void)showBluetoothDeviceNotFoundAlert
+{
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No devices found."
+													message:@"Check that the Arduino board and BLE shield are powered on."
+												   delegate:self
+										  cancelButtonTitle:@"Rescan"
+										  otherButtonTitles:nil];
+	[alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	[self scanBluetoothDevices];
 }
 
 #pragma mark - Actions

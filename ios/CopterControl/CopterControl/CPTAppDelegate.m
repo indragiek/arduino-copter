@@ -7,6 +7,7 @@
 //
 
 #import "CPTAppDelegate.h"
+#import "SVProgressHUD.h"
 
 @implementation CPTAppDelegate
 
