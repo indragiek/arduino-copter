@@ -122,9 +122,9 @@ void scene_redraw_frames(scene *s, gen_frame *new_frames) {
         // Fill or erase pixels from the top boundary depending on the
         // change in height (delta).
         if (delta > 0) {
-            tft->fillRect(i, old_height, 1, delta, COL_TER(s));
+            draw_rect(s->tft, (g_rect){{i, old_height}, {1, delta}}, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(i, old_height + delta, 1, -delta, COL_BG(s));
+            draw_rect(s->tft, (g_rect){{i, old_height + delta}, {1, -delta}}, COL_BG(s));
         }
 
         // Same for the bottom boundary.
@@ -134,9 +134,9 @@ void scene_redraw_frames(scene *s, gen_frame *new_frames) {
 
         int gen_height = s->gen->size.height;
         if (delta > 0) {
-            tft->fillRect(i, gen_height - old_height - delta, 1, delta, COL_TER(s));
+            draw_rect(s->tft, (g_rect){{i, gen_height - old_height}, {1, delta}}, COL_TER(s));
         } else if (delta < 0) {
-            tft->fillRect(i, gen_height - old_height, 1, -delta, COL_BG(s));
+            draw_rect(s->tft, (g_rect){{i, gen_height - old_height}, {1, -delta}}, COL_BG(s));
         }
     }
 }
@@ -153,8 +153,8 @@ void scene_initial_draw(scene *s) {
 
     for (int i = 0; i < len; i++) {
         gen_frame frame = frames[i];
-        tft->fillRect(i, 0, 1, frame.top_height, COL_TER(s));
-        tft->fillRect(i, gen->size.height - frame.bottom_height, 1, frame.bottom_height, COL_TER(s));
+        draw_rect(s->tft, (g_rect){{i, 0}, {1, frame.top_height}}, COL_TER(s));
+        draw_rect(s->tft, (g_rect){{i, gen->size.height - frame.bottom_height}, {1, frame.bottom_height}}, COL_TER(s));
     }
 
     s->frames = frames;

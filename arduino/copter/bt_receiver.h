@@ -3,28 +3,10 @@
 //
 // Created November 27, 2013
 //
-// Game controls and score transfer over Bluetooth.
-
-// ======== Specification ========
+// Sends and receives Bluetooth commands over the serial port from
+// another Arduino connected to the BLE shield.
 //
-// This specification defines the communication protocol used by copter to
-// exchange data between the game and an external controller device. The
-// following commands are implemented:
-//
-// 1) RECEIVE: Button Press Down
-//    Byte sequence: 0x01 0x0`
-//
-// 2) RECEIVE: Button Press Up
-//    Byte sequence: 0x01 0x00
-//
-// 3) RECEIVE: Toggle play/pause
-//    Byte sequence: 0x02
-//
-// 4) SEND: Game reset signal.
-//    Byte sequence: 0x03
-//
-// 3) SEND: Increment score by 1pt.
-//    Byte sequence: 0x04
+// See bt_transmitter.h for the spec.
 
 #ifndef __bluetooth_h__
 #define __bluetooth_h__
@@ -54,15 +36,15 @@ typedef struct {
 // @param functions A struct of callback functions to be called for certain Bluetooth
 // 		  			commands received by the module.
 //
-void bluetooth_init(BTCallbackFunctions functions);
+void bt_receiver_init(BTCallbackFunctions functions);
 
 // Checks for incoming Bluetooth data and calls the appropriate callback functions
 // if necessary.
-void bluetooth_update();
+void bt_receiver_update();
 
 // Send Bluetooth command to increment the game score by 1pt.
-void bluetooth_increment_score();
+void bt_receiver_increment_score();
 
 // Send Bluetooth command to indicate that the game has been reset.
-void bluetooth_send_reset();
+void bt_receiver_send_reset();
 #endif
