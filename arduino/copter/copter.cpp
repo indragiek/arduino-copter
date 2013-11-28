@@ -21,6 +21,8 @@ const int BTN 		= 9;
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); // TFT Display
 scene *s; // Main scene
+boolean remote_btn_state = false; // State of the remotely controlled copter button.
+boolean remote_pause_state = false; // State of the remotely controlled play/pause button (true if paused).
 
 // =========== Function Definitions ============ 
 
@@ -90,20 +92,25 @@ void run_game() {
 	s = scene_new(&tft, 100, 1, 125, (g_size){10, 25}, colors);
 
 	bt_receiver_send_reset();
+	remote_pause_state = false;
+	remote_btn_state = false;
 	while (1) {
-		scene_update(s, copter_up);
 		bt_receiver_update();
-		bt_receiver_increment_score();
+		if (remote_pause_state == false) {
+			boolean btn_down = (digitalRead(BTN) == LOW) || remote_btn_state;
+			scene_update(s, btn_down ? copter_up : copter_down);
+			bt_receiver_increment_score();
+		}
 	}
 }
 
 
 void bt_button_press(BTButtonState state) {
-
+	remote_btn_state = (state == BTButtonDown) ? true : false;
 }
 
 void bt_toggle_pause() {
-
+	remote_pause_state = !remote_pause_state;
 }
 
 void loop() {}
