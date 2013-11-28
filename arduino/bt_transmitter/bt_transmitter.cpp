@@ -38,20 +38,13 @@ void loop() {
 	ble_do_events();
 	if (!ble_connected()) return;
 
-	unsigned char num_bytes = ble_available();
-	if (num_bytes) {
-		int header = ble_read();
-		if (header == 0x01 && num_bytes >= 2) { // Button up/down command
-			int state = ble_read();
-			Serial3.write(header);
-			Serial3.write(state);
-		} else {
-			Serial3.write(header);
-		}
+	int num_bytes = ble_available();
+	for (int i = 0; i < num_bytes; i++) {
+		Serial3.write(ble_read());
 	}
 
-	if (Serial3.available()) {
-		int byte = Serial3.read();
-		ble_write(byte);
+	num_bytes = Serial3.available();
+	for (int i = 0; i < num_bytes; i++) {
+		ble_write(Serial3.read());
 	}
 }
