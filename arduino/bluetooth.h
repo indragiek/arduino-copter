@@ -1,0 +1,68 @@
+// ArduinoCopter
+// bluetooth.h
+//
+// Created November 27, 2013
+//
+// Game controls and score transfer over Bluetooth.
+
+// ======== Specification ========
+//
+// This specification defines the communication protocol used by copter to
+// exchange data between the game and an external controller device. The
+// following commands are implemented:
+//
+// 1) RECEIVE: Button Press Down
+//    Byte sequence: 0x01 0x0`
+//
+// 2) RECEIVE: Button Press Up
+//    Byte sequence: 0x01 0x00
+//
+// 3) RECEIVE: Toggle play/pause
+//    Byte sequence: 0x02
+//
+// 4) SEND: Game reset signal.
+//    Byte sequence: 0x03
+//
+// 3) SEND: Increment score by 1pt.
+//    Byte sequence: 0x04
+
+#ifndef __bluetooth_h__
+#define __bluetooth_h__
+// The two possible button press states
+// BTButtonDown - When the button is pressed down.
+// BTButtonUp - When the button has been released.
+typedef enum {
+	BTButtonUp = 0,
+	BTButtonDown = 1
+} BTButtonState;
+
+// Definition for a callback function that accepts a BTButtonState as
+// a parameter.
+typedef void BTButtonCallback(BTButtonState state);
+
+// Definition for a callback function that toggles the play/pause state.
+typedef void BTPauseToggleCallback(void);
+
+// Structure that defines a set of callback functions for Bluetooth
+// commands.
+typedef struct {
+	BTButtonCallback *button;
+	BTPauseToggleCallback *toggle;
+} BTCallbackFunctions;
+
+// Initializes the Bluetooth stack.
+// @param functions A struct of callback functions to be called for certain Bluetooth
+// 		  			commands received by the module.
+//
+void bluetooth_init(BTCallbackFunctions functions);
+
+// Checks for incoming Bluetooth data and calls the appropriate callback functions
+// if necessary.
+void bluetooth_update();
+
+// Send Bluetooth command to increment the game score by 1pt.
+void bluetooth_increment_score();
+
+// Send Bluetooth command to indicate that the game has been reset.
+void bluetooth_send_reset();
+#endif
