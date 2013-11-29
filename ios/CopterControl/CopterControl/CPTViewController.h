@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  Main view controller.
+ */
 @interface CPTViewController : UIViewController
 
 @end
