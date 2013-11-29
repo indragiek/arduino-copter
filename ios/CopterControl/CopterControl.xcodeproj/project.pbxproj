@@ -10,6 +10,8 @@
 		030EE533184510870013C8A6 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 030EE530184510870013C8A6 /* SVProgressHUD.bundle */; };
 		030EE534184510870013C8A6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 030EE532184510870013C8A6 /* SVProgressHUD.m */; };
 		030EE5361845110B0013C8A6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030EE5351845110B0013C8A6 /* QuartzCore.framework */; };
+		035A04881848283200CA11AA /* CPTBluetoothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 035A04871848283200CA11AA /* CPTBluetoothManager.m */; };
+		035A048A1848288400CA11AA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035A04891848288400CA11AA /* CoreBluetooth.framework */; };
 		03D280BA1844F30B002498FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280B91844F30B002498FF /* Foundation.framework */; };
 		03D280BC1844F30B002498FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BB1844F30B002498FF /* CoreGraphics.framework */; };
 		03D280BE1844F30B002498FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BD1844F30B002498FF /* UIKit.framework */; };
@@ -43,6 +45,9 @@
 		030EE531184510870013C8A6 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		030EE532184510870013C8A6 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		030EE5351845110B0013C8A6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		035A04861848283200CA11AA /* CPTBluetoothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPTBluetoothManager.h; sourceTree = "<group>"; };
+		035A04871848283200CA11AA /* CPTBluetoothManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPTBluetoothManager.m; sourceTree = "<group>"; };
+		035A04891848288400CA11AA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		03D280B61844F30B002498FF /* CopterControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopterControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03D280B91844F30B002498FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03D280BB1844F30B002498FF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -72,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				035A048A1848288400CA11AA /* CoreBluetooth.framework in Frameworks */,
 				030EE5361845110B0013C8A6 /* QuartzCore.framework in Frameworks */,
 				03D280BC1844F30B002498FF /* CoreGraphics.framework in Frameworks */,
 				03D280BE1844F30B002498FF /* UIKit.framework in Frameworks */,
@@ -126,6 +132,7 @@
 		03D280B81844F30B002498FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				035A04891848288400CA11AA /* CoreBluetooth.framework */,
 				030EE5351845110B0013C8A6 /* QuartzCore.framework */,
 				03D280B91844F30B002498FF /* Foundation.framework */,
 				03D280BB1844F30B002498FF /* CoreGraphics.framework */,
@@ -146,6 +153,8 @@
 				03D280CF1844F30B002498FF /* CPTViewController.m */,
 				03D280D11844F30B002498FF /* Images.xcassets */,
 				03D280C01844F30B002498FF /* Supporting Files */,
+				035A04861848283200CA11AA /* CPTBluetoothManager.h */,
+				035A04871848283200CA11AA /* CPTBluetoothManager.m */,
 			);
 			path = CopterControl;
 			sourceTree = "<group>";
@@ -302,6 +311,7 @@
 				03D280C61844F30B002498FF /* main.m in Sources */,
 				030EE534184510870013C8A6 /* SVProgressHUD.m in Sources */,
 				03D280D01844F30B002498FF /* CPTViewController.m in Sources */,
+				035A04881848283200CA11AA /* CPTBluetoothManager.m in Sources */,
 				03D280F318450214002498FF /* BLE.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
