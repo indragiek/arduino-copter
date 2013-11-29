@@ -11,7 +11,7 @@
 //
 // @param s Pointer to the `scene` to draw.
 //
-void scene_initial_draw(scene *s);
+static void scene_initial_draw(scene *s);
 
 // Does a partial redraw of the scene for a new set of frames. Only
 // updates the pixels that are necessary, versus doing a complete redraw.
@@ -19,36 +19,61 @@ void scene_initial_draw(scene *s);
 // @param s             Pointer to the `scene` to redraw.
 // @param new_frames    The new array of frames to draw.
 //
-void scene_redraw_frames(scene *s, gen_frame *new_frames);
+static void scene_redraw_frames(scene *s, gen_frame *new_frames);
 
 // Generate an array of updated frames for a screen update.
 //
 // @param s Pointer to the `scene` to generate new frames for.
 // @return The updated array of frames.
-gen_frame * scene_update_frames(scene *s);
+static gen_frame * scene_update_frames(scene *s);
 
 // Update underlying data for block layout. Handles updating the origins
 // of on-screen blocks, removing off-screen blocks, and inserting blocks
 // at the appropriate distaince intervals.
 //
 // @param s Pointer to the `scene` for which to update the blocks.
-void scene_update_blocks(scene *s);
+static void scene_update_blocks(scene *s);
 
 // Inserts a new block at the end of the block rects array. The block is 
 // positioned to start at the right edge of the display.
 //
 // @param s Pointer to the `scene` for which to insert a block.
-void scene_insert_block(scene *s);
+static void scene_insert_block(scene *s);
 
 // Updates the position of the blocks on screen.
 //
 // @param s Pointer to the `scene` for which to redraw the blocks.
-void scene_redraw_blocks(scene *s);
+static void scene_redraw_blocks(scene *s);
+
+// Updates the coordinates of the copter based on the given direction.
+//
+// @param s     Pointer to the `scene` for which to update the position.
+// @param dir   The direction that the copter is moving in.
+static void scene_update_copter(scene *s, copter_direction dir);
+
+// Redraw the copter on screen.
+//
+// @param s         Pointer to the `scene` for which to redraw the copter.
+// @param color     The color to fill the copter with.
+static void scene_redraw_copter(scene *s, int color);
 
 // =========== Constants ============
 
 // Spacing between the edges of the terrain and the obstacle blocks.
-const int block_edge_margin = 10;
+static const int block_edge_margin = 10;
+
+// Maximum value of gravity.
+static const int max_gravity = 5;
+
+// Maximum value of boost.
+static const int max_boost = 10;
+
+// Pixel size of the copter.
+static const g_size copter_size = {1, 1};
+
+// Array of pixels to use for drawing the copter at an assumed
+// origin of {0, 0}
+static const g_point copter_pixels[] = {{0, 0}};
 
 // =========== Macros ============
 
@@ -56,6 +81,7 @@ const int block_edge_margin = 10;
 #define COL_TER(s)      s->colors.terrain
 #define COL_BG(s)       s->colors.background
 #define COL_BLCK(s)     s->colors.blocks
+#define COL_CPTR(s)     s->colors.copter
 
 // =========== Public API ============
 // All Public APIs are documented in scene.h
@@ -81,6 +107,9 @@ scene * scene_new(Adafruit_ST7735 *tft,
     s->last_block_d = 0;
     s->block_size = blk_size;
     s->max_block_d = blk_d;
+    s->copter_pos = (g_point){0, (tft_size.height / 2) - (copter_size.height / 2)};
+    s->copter_gravity = 0;
+    s->copter_boost = 0;
     s->gen = gen_new(tft_size, spacing, max_d);
     scene_initial_draw(s);
     return s;
@@ -97,6 +126,10 @@ void scene_update(scene *s, copter_direction dir) {
 
     scene_redraw_blocks(s);
     scene_update_blocks(s);
+
+    scene_redraw_copter(s, COL_BG(s));
+    scene_update_copter(s, dir);
+    scene_redraw_copter(s, COL_CPTR(s));
 }
 
 void scene_free(scene *s) {
@@ -107,7 +140,7 @@ void scene_free(scene *s) {
 
 // =========== Private API ============
 
-void scene_redraw_frames(scene *s, gen_frame *new_frames) {
+static void scene_redraw_frames(scene *s, gen_frame *new_frames) {
     gen_frame *old_frames = s->frames;
     for (int i = 0; i < s->num_frames; i++) {
         gen_frame old_frame = old_frames[i];
@@ -141,7 +174,7 @@ void scene_redraw_frames(scene *s, gen_frame *new_frames) {
     }
 }
 
-void scene_initial_draw(scene *s) {
+static void scene_initial_draw(scene *s) {
     Adafruit_ST7735 *tft = s->tft;
     tft->fillScreen(COL_BG(s));
 
@@ -161,7 +194,7 @@ void scene_initial_draw(scene *s) {
     s->num_frames = len;
 }
 
-gen_frame * scene_update_frames(scene *s) {
+static gen_frame * scene_update_frames(scene *s) {
     // Pop the leftmost frame from the generator.
     gen_frame new_frame;
     gen_frame popped_frame = gen_pop_frame(s->gen, &new_frame);
@@ -180,7 +213,7 @@ gen_frame * scene_update_frames(scene *s) {
     return frames;
 }
 
-void scene_update_blocks(scene *s) {
+static void scene_update_blocks(scene *s) {
     size_t len = s->num_blocks;
     g_rect *rects = s->block_rects;
     if (len) {
@@ -215,7 +248,7 @@ void scene_update_blocks(scene *s) {
     }
 }
 
-void scene_insert_block(scene *s) {
+static void scene_insert_block(scene *s) {
     // Calculate the minimum and maximum constraints for the origin by taking
     // into account the heights of the last frame, frame delta, block size, etc.
     generator *g = s->gen;
@@ -231,7 +264,7 @@ void scene_insert_block(scene *s) {
     s->block_rects[s->num_blocks - 1] = rect;
 }
 
-void scene_redraw_blocks(scene *s) {
+static void scene_redraw_blocks(scene *s) {
     size_t len = s->num_blocks;
     for (int i = 0; i < len; i++) {
         g_rect r = s->block_rects[i];
@@ -248,4 +281,27 @@ void scene_redraw_blocks(scene *s) {
     }
 }
 
+static void scene_update_copter(scene *s, copter_direction dir) {
+    if (dir == copter_up) {
+        if (++s->copter_boost > max_boost) {
+            s->copter_boost = max_boost;
+        }
+    } else {
+        if (--s->copter_boost < 0) {
+            s->copter_boost = 0;
+        }
+    }
+    if (++s->copter_gravity > max_gravity) {
+        s->copter_gravity = max_gravity;
+    }
+    s->copter_pos.y += s->copter_boost - s->copter_gravity;
+}
 
+static void scene_redraw_copter(scene *s, int color) {
+    for (int i = 0; i < sizeof(copter_pixels); i++) {
+        g_point p = copter_pixels[i];
+        p.x += s->copter_pos.x;
+        p.y += s->copter_pos.y;
+        draw_pixel(s->tft, p, color);
+    }
+}

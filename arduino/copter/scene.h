@@ -21,6 +21,7 @@ typedef struct {
 	int background; // Color of the background of the game.
 	int terrain;	// Color of the terrain on the top and bottom.
 	int blocks;		// Color of the obstable blocks.
+    int copter;     // Color of the copter
 } scene_colors;
 
 typedef struct {
@@ -34,6 +35,9 @@ typedef struct {
     int max_block_d;		// Distance between obstacle blocks.
     g_size block_size;		// Size of obstacle blocks.
     scene_colors colors;	// Color definitions.
+    g_point copter_pos;     // Current position of the helicopter;
+    int copter_boost;       // Current copter boost level.
+    int copter_gravity;     // Current copter gravity.
 } scene;
 
 typedef enum {

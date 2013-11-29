@@ -9,3 +9,7 @@
 void draw_rect(Adafruit_ST7735 *tft, g_rect rect, int color) {
 	tft->fillRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, color);
 }
+
+void draw_pixel(Adafruit_ST7735 *tft, g_point point, int color) {
+	tft->drawPixel(point.x, point.y, color);
+}

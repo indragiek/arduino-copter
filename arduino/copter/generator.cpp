@@ -11,7 +11,7 @@
 // @param g Pointer to the generator.
 //
 // @return The newly created frame.
-gen_frame gen_generate_next_frame(generator *g);
+static gen_frame gen_generate_next_frame(generator *g);
 
 // Detects whether an object inside a rectangle specified in screen
 // coordinates is colliding with the terrain boundaries.
@@ -22,7 +22,7 @@ gen_frame gen_generate_next_frame(generator *g);
 // @param h The height of the object to test collisions for.
 //
 // @return Boolean value indicating whether a collision was detected.
-boolean gen_detect_frame_collision(generator *g, int x, int y, int h);
+static boolean gen_detect_frame_collision(generator *g, int x, int y, int h);
 
 // =========== Public API ============
 // All Public APIs are documented in generator.h.
@@ -69,7 +69,7 @@ boolean gen_detect_collision(generator *g, g_rect r) {
 
 // =========== Private API ============
 
-gen_frame gen_generate_next_frame(generator *g) {
+static gen_frame gen_generate_next_frame(generator *g) {
     gen_frame f;
     size_t len = g->num_frames;
     if (len > 0) {
@@ -89,7 +89,7 @@ gen_frame gen_generate_next_frame(generator *g) {
     return f;
 }
 
-boolean gen_detect_frame_collision(generator *g, int x, int y, int h) {
+static boolean gen_detect_frame_collision(generator *g, int x, int y, int h) {
     gen_frame f = g->frames[x];
     return (y <= f.top_height) || ((y + h) >= (g->size.height - f.bottom_height));
 }

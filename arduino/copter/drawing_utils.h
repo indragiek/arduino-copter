@@ -18,4 +18,11 @@
 // @param color	The color to use to fill the rect.
 void draw_rect(Adafruit_ST7735 *tft, g_rect rect, int color);
 
+// Draws a pixel specified using a `g_point` struct.
+//
+// @param tft 	Pointer to the TFT display struct.
+// @param point The point of the pixel to draw.
+// @param color The color to use to fill the pixel.
+void draw_pixel(Adafruit_ST7735 *tft, g_point point, int color);
+
 #endif

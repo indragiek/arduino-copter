@@ -27,10 +27,10 @@ boolean remote_pause_state = false; // State of the remotely controlled play/pau
 // =========== Function Definitions ============ 
 
 // Shows the introduction screen with the game title, etc.
-void show_intro();
+static void show_intro();
 
 // Runs the Copter game until the player loses.
-void run_game();
+static void run_game();
 
 // Bluetooth callbacks
 void bt_button_press(BTButtonState state);
@@ -52,7 +52,7 @@ void setup() {
 	run_game();
 }
 
-void show_intro() {
+static void show_intro() {
 	tft.fillScreen(ST7735_BLACK);
 
 	// Draw the game title "Copter"
@@ -82,13 +82,14 @@ void show_intro() {
 	}
 }
 
-void run_game() {
+static void run_game() {
 	if (s) free(s);
 
 	scene_colors colors;
 	colors.terrain = ST7735_GREEN;
 	colors.background = ST7735_BLACK;
 	colors.blocks = ST7735_YELLOW;
+	colors.copter = ST7735_RED;
 	s = scene_new(&tft, 100, 1, 125, (g_size){10, 25}, colors);
 
 	bt_receiver_send_reset();
