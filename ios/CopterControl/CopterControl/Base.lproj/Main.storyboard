@@ -37,7 +37,7 @@
                                     <action selector="playPause:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="hq6-bZ-vRA"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1026" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="201-2X-usv">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="201-2X-usv">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="117"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.29803922772407532" green="0.85098046064376831" blue="0.39215689897537231" alpha="1" colorSpace="deviceRGB"/>
@@ -45,7 +45,7 @@
                                 <color key="textColor" red="0.058823533356189728" green="0.48627454042434692" blue="0.08235294371843338" alpha="1" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1025" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9pR-uJ-VHh">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9pR-uJ-VHh">
                                 <rect key="frame" x="0.0" y="118" width="320" height="117"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.98823535442352295" green="0.22745099663734436" blue="0.18823531270027161" alpha="1" colorSpace="deviceRGB"/>
@@ -60,6 +60,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
                         <outlet property="highScoreLabel" destination="9pR-uJ-VHh" id="HGy-XF-KBB"/>
+                        <outlet property="playPauseButton" destination="qld-fI-Yin" id="bfy-aq-OBo"/>
                         <outlet property="scoreLabel" destination="201-2X-usv" id="Bhj-Nk-Wa4"/>
                     </connections>
                 </viewController>

@@ -26,7 +26,6 @@
 		03D280DB1844F30B002498FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D280BD1844F30B002498FF /* UIKit.framework */; };
 		03D280E31844F30B002498FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03D280E11844F30B002498FF /* InfoPlist.strings */; };
 		03D280E51844F30B002498FF /* CopterControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280E41844F30B002498FF /* CopterControlTests.m */; };
-		03D280F318450214002498FF /* BLE.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D280F118450214002498FF /* BLE.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,9 +66,6 @@
 		03D280E01844F30B002498FF /* CopterControlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CopterControlTests-Info.plist"; sourceTree = "<group>"; };
 		03D280E21844F30B002498FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03D280E41844F30B002498FF /* CopterControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CopterControlTests.m; sourceTree = "<group>"; };
-		03D280F018450214002498FF /* BLE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLE.h; sourceTree = "<group>"; };
-		03D280F118450214002498FF /* BLE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLE.m; sourceTree = "<group>"; };
-		03D280F218450214002498FF /* BLEDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,20 +188,8 @@
 			isa = PBXGroup;
 			children = (
 				030EE52E184510870013C8A6 /* SVProgressHUD */,
-				03D280EF18450214002498FF /* BLE */,
 			);
 			name = External;
-			sourceTree = "<group>";
-		};
-		03D280EF18450214002498FF /* BLE */ = {
-			isa = PBXGroup;
-			children = (
-				03D280F018450214002498FF /* BLE.h */,
-				03D280F118450214002498FF /* BLE.m */,
-				03D280F218450214002498FF /* BLEDefines.h */,
-			);
-			name = BLE;
-			path = ../../External/BLE/BLEFramework/BLE;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -312,7 +296,6 @@
 				030EE534184510870013C8A6 /* SVProgressHUD.m in Sources */,
 				03D280D01844F30B002498FF /* CPTViewController.m in Sources */,
 				035A04881848283200CA11AA /* CPTBluetoothManager.m in Sources */,
-				03D280F318450214002498FF /* BLE.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

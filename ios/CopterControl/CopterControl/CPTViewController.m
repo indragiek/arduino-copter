@@ -10,12 +10,15 @@
 #import "CPTBluetoothManager.h"
 #import "SVProgressHUD.h"
 
+static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
+
 @interface CPTViewController ()
 @property (nonatomic, strong, readonly) CPTBluetoothManager *bluetoothManager;
 @property (nonatomic, weak) IBOutlet UILabel *scoreLabel;
 @property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
 @property (nonatomic, weak) IBOutlet UIView *scoreHeaderView;
 @property (nonatomic, weak) IBOutlet UIView *highScoreHeaderView;
+@property (nonatomic, weak) IBOutlet UIButton *playPauseButton;
 
 @property (nonatomic, assign) NSUInteger score;
 @property (nonatomic, assign) NSUInteger highScore;
@@ -32,6 +35,8 @@
 {
     [super viewDidLoad];
 	self.view.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
+	self.score = 0;
+	self.highScore = [[NSUserDefaults.standardUserDefaults objectForKey:CPTUserDefaultsHighScoreKey] unsignedIntegerValue];
 
 	// Defer to next iteration of the run loop.
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -81,26 +86,38 @@
 	}
 }
 
+
+// ======== Specification ========
+// (From bt_transmitter.h)
+//
+// This specification defines the communication protocol used by copter to
+// exchange data between the game and an external controller device. The
+// following commands are implemented:
+//
+// 1) RECEIVE: Button Press Down
+//    Byte sequence: 0x01 0x01
+//
+// 2) RECEIVE: Button Press Up
+//    Byte sequence: 0x01 0x00
+//
+// 3) RECEIVE: Toggle play/pause
+//    Byte sequence: 0x02
+//
+// 4) SEND: Game reset signal.
+//    Byte sequence: 0x03
+//
+// 3) SEND: Increment score by 1pt.
+//    Byte sequence: 0x04
+//
 - (void)handleReceivedData:(NSData *)data
 {
-	uint8_t byte;
+	unsigned char byte;
 	[data getBytes:&byte length:1];
-	NSLog(@"%d", byte);
-}
-
-- (void)showBluetoothDeviceNotFoundAlert
-{
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No devices found."
-													message:@"Check that the Arduino board and BLE shield are powered on."
-												   delegate:self
-										  cancelButtonTitle:@"Rescan"
-										  otherButtonTitles:nil];
-	[alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	[self scanBluetoothDevices];
+	if (byte == 0x04) {
+		self.score++;
+	} else if (byte == 0x03) {
+		self.playPauseButton.selected = !self.playPauseButton.selected;
+	}
 }
 
 #pragma mark - Accessors
@@ -113,22 +130,43 @@
 	return _bluetoothManager;
 }
 
+- (void)setScore:(NSUInteger)score
+{
+	_score = score;
+	self.scoreLabel.text = @(score).stringValue;
+}
+
+- (void)setHighScore:(NSUInteger)highScore
+{
+	_highScore = highScore;
+	self.highScoreLabel.text = @(highScore).stringValue;
+	[NSUserDefaults.standardUserDefaults setObject:@(highScore) forKey:CPTUserDefaultsHighScoreKey];
+}
+
 #pragma mark - Actions
 
 - (IBAction)buttonDown:(id)sender
 {
-	NSLog(@"Button down");
+	const unsigned char bytes[] = {0x01, 0x01};
+	[self writeBytes:bytes len:2];
 }
 
 - (IBAction)buttonUp:(id)sender
 {
-	NSLog(@"Button up");
+	const unsigned char bytes[] = {0x01, 0x00};
+	[self writeBytes:bytes len:2];
 }
 
 - (IBAction)playPause:(UIButton *)sender
 {
-	sender.selected = !sender.selected;
-	NSLog(@"Play pause");
+	const unsigned char bytes[] = {0x02};
+	[self writeBytes:bytes len:1];
+}
+
+- (void)writeBytes:(const unsigned char *)bytes len:(NSUInteger)len
+{
+	NSData *data = [NSData dataWithBytes:bytes length:len];
+	[self.bluetoothManager write:data];
 }
 
 @end
