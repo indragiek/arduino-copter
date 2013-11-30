@@ -45,6 +45,14 @@ static void scene_insert_block(scene *s);
 // @param s Pointer to the `scene` for which to redraw the blocks.
 static void scene_redraw_blocks(scene *s);
 
+// Detects whether there was a collision with an obstacle or boundary.
+//
+// @param s Pointer to the `scene` for which to check collisions.
+// @param r The rect of the object that is potentially colliding with an obstacle.
+//
+// @return Whether the object is colliding with an obstacle or boundary.
+static boolean scene_detect_collision(scene *s, g_rect r);
+
 // Updates the coordinates of the copter based on the given direction.
 //
 // @param s     Pointer to the `scene` for which to update the position.
@@ -68,12 +76,15 @@ static const int max_gravity = 5;
 // Maximum value of boost.
 static const int max_boost = 10;
 
+// Dampening factor for the movement of the copter.
+static const float damping_factor = 0.5;
+
 // Pixel size of the copter.
-static const g_size copter_size = {1, 1};
+static const g_size copter_size = {3, 3};
 
 // Array of pixels to use for drawing the copter at an assumed
 // origin of {0, 0}
-static const g_point copter_pixels[] = {{0, 0}};
+static const g_point copter_pixels[] = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
 
 // =========== Macros ============
 
@@ -105,7 +116,7 @@ scene * scene_new(Adafruit_GFX *tft,
     s->last_block_d = 0;
     s->block_size = blk_size;
     s->max_block_d = blk_d;
-    s->copter_pos = (g_point){0, (tft_size.height / 2) - (copter_size.height / 2)};
+    s->copter_pos = (g_point){10, (tft_size.height / 2) - (copter_size.height / 2)};
     s->copter_gravity = 0;
     s->copter_boost = 0;
     s->gen = gen_new(tft_size, spacing, max_d);
@@ -113,7 +124,7 @@ scene * scene_new(Adafruit_GFX *tft,
     return s;
 }
 
-void scene_update(scene *s, copter_direction dir) {
+boolean scene_update(scene *s, copter_direction dir) {
     // Redraw the scene with the updated frames.
     gen_frame *frames = scene_update_frames(s);
     scene_redraw_frames(s, frames);
@@ -126,8 +137,17 @@ void scene_update(scene *s, copter_direction dir) {
     scene_update_blocks(s);
 
     scene_redraw_copter(s, COL_BG(s));
+    g_point old_pos = s->copter_pos;
     scene_update_copter(s, dir);
-    scene_redraw_copter(s, COL_CPTR(s));
+    g_point new_pos = s->copter_pos;
+
+    static boolean col = false;
+    if (new_pos.y != old_pos.y) {
+        scene_redraw_copter(s, COL_CPTR(s));
+        g_rect copter_rect = (g_rect){s->copter_pos, copter_size};
+        col = scene_detect_collision(s, copter_rect);
+    }
+    return col;
 }
 
 void scene_free(scene *s) {
@@ -279,6 +299,22 @@ static void scene_redraw_blocks(scene *s) {
     }
 }
 
+static boolean scene_detect_collision(scene *s, g_rect r) {
+    boolean col = false;
+    for (int i = 0; i < s->num_blocks; i++) {
+        g_rect blck_r = s->block_rects[i];
+        if (g_rect_intersects(r, blck_r)) {
+            col = true;
+            break;
+        }
+    }
+    if (col == false) {
+        col = gen_detect_collision(s->gen, r);
+    }
+    return col;
+}
+
+
 static void scene_update_copter(scene *s, copter_direction dir) {
     if (dir == copter_up) {
         if (++s->copter_boost > max_boost) {
@@ -292,7 +328,7 @@ static void scene_update_copter(scene *s, copter_direction dir) {
     if (++s->copter_gravity > max_gravity) {
         s->copter_gravity = max_gravity;
     }
-    s->copter_pos.y += s->copter_boost - s->copter_gravity;
+    s->copter_pos.y += (s->copter_gravity - s->copter_boost) * damping_factor;
 }
 
 static void scene_redraw_copter(scene *s, int color) {

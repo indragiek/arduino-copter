@@ -72,7 +72,8 @@ scene * scene_new(Adafruit_GFX *tft,
 // @param s     Pointer to the `scene` structure to update.
 // @param dir   Movement direction of the helicopter (`copter_up` or `copter_down`).
 //
-void scene_update(scene *s, copter_direction dir);
+// @return Whether a collision occurred.
+boolean scene_update(scene *s, copter_direction dir);
 
 // Frees all memory associated with the scene.
 //

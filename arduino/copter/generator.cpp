@@ -59,8 +59,8 @@ gen_frame gen_pop_frame(generator *g, gen_frame *new_frame) {
 }
 
 boolean gen_detect_collision(generator *g, g_rect r) {
-    for (int x = r.origin.x; x < r.size.width; x++) {
-        if (gen_detect_frame_collision(g, x, r.origin.y, r.size.height)) {
+    for (int i = r.origin.x; i < g_rect_maxx(r); i++) {
+        if (gen_detect_frame_collision(g, i, r.origin.y, r.size.height)) {
             return true;
         }
     }

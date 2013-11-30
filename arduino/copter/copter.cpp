@@ -124,7 +124,7 @@ static void run_game() {
 	colors.terrain = TFT_GREEN;
 	colors.background = TFT_BLACK;
 	colors.blocks = TFT_YELLOW;
-	colors.copter = TFT_RED;
+	colors.copter = TFT_WHITE;
 #ifdef USE_LARGE_LCD
 
 	// We use a manual size override when testing on a large LCD because
@@ -138,14 +138,16 @@ static void run_game() {
 	bt_receiver_send_reset();
 	remote_pause_state = false;
 	remote_btn_state = false;
-	while (1) {
+	boolean collision = false;
+	while (collision == false) {
 		bt_receiver_update();
 		if (remote_pause_state == false) {
 			boolean btn_down = (digitalRead(BTN) == LOW) || remote_btn_state;
-			scene_update(s, btn_down ? copter_up : copter_down);
+			collision = scene_update(s, btn_down ? copter_up : copter_down);
 			bt_receiver_increment_score();
 		}
 	}
+	tft.fillScreen(TFT_BLACK);
 }
 
 
