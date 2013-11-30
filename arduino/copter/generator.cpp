@@ -67,6 +67,11 @@ boolean gen_detect_collision(generator *g, g_rect r) {
     return false;
 }
 
+void gen_free(generator *g) {
+    free(g->frames);
+    free(g);
+}
+
 // =========== Private API ============
 
 static gen_frame gen_generate_next_frame(generator *g) {

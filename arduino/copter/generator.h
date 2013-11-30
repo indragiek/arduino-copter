@@ -68,4 +68,9 @@ gen_frame gen_pop_frame(generator *g, gen_frame *new_frame);
 // @return  true if a collision occurred, false otherwise.
 boolean gen_detect_collision(generator *g, g_rect r);
 
+// Free memory associated wtih a generator.
+//
+// @param g Pointer to the generator.
+void gen_free(generator *g);
+
 #endif

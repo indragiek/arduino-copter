@@ -153,6 +153,7 @@ boolean scene_update(scene *s, copter_direction dir) {
 void scene_free(scene *s) {
     free(s->frames);
     free(s->block_rects);
+    gen_free(s->gen);
     free(s);
 }
 
