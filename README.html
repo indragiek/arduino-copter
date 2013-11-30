@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>ArduinoCopter</title>
+
+</head>
+<body>
+<h2>ArduinoCopter</h2>
+
+<h3>Indragie Karunaratne &amp; Jiawei Wu</h3>
+
+<h3>Project Directory Structure</h3>
+
+<ul>
+<li><strong>arduino</strong>
+
+<ul>
+<li><strong>copter</strong> - Game code to be run on primary Arduino</li>
+<li><strong>bt_transmitter</strong> - Bluetooth code to be run on secondary Arduino</li>
+<li><strong>lib</strong>
+
+<ul>
+<li><strong>BLEShield</strong> - Libraries for RedBearLab BLE shield.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>ios</strong>
+
+<ul>
+<li><strong>CopterControl</strong> - Source code for the iOS controller app.</li>
+<li><strong>External</strong> - Once git submodules have been initialized and cloned, contains 3rd party dependencies used in the iOS project (see below)</li>
+</ul>
+</li>
+</ul>
+
+
+<p>The project directory is a git repository. If you plan on using the iOS app, initialize and clone git submodules before attempting to build the project:</p>
+
+<pre><code>cd &lt;project dir&gt;
+git submodule update --init --recursive
+</code></pre>
+
+<p>The libraries needed to run the Bluetooth board can be found in <strong>arduino/libs</strong> or downloaded directly from the manufacturer's web site.</p>
+
+<h3>Parts</h3>
+
+<h4>Required</h4>
+
+<ul>
+<li>Arduino Mega 2560</li>
+<li>Adafruit 1.8" TFT Display</li>
+<li>LED</li>
+<li>Push button</li>
+</ul>
+
+
+<h4>Optional (for Bluetooth Controller)</h4>
+
+<ul>
+<li>Secondary Arduino board (e.g. Arduino Uno)</li>
+<li><a href="http://redbearlab.com/bleshield/">RedBearLab BLE Shield v2</a></li>
+<li>iPhone 5 or 5S running iOS 6/7</li>
+<li>Apple Developer Tools/Xcode running on a Mac and iOS Developer Membership</li>
+<li>Our CopterControl iOS software</li>
+</ul>
+
+
+<h3>Connections</h3>
+
+<h4>1. TFT Display</h4>
+
+<ol>
+<li>GND to BB GND bus</li>
+<li>VCC to BB positive bus</li>
+<li>RESET to Pin 8</li>
+<li>D/C (Data/Command) to Pin 7</li>
+<li>TFT_CS (TFT/screen Chip Select) to Pin 6</li>
+<li>MOSI (Master Out Slave In) to Pin 51</li>
+<li>SCK (Clock) to Pin 52</li>
+<li>MISO (Master In Slave Out) to 50</li>
+<li>LITE (Backlite) to BB positive bus</li>
+</ol>
+
+
+<h4>2. Push Button</h4>
+
+<p>Ground and connect to pin 9 on the Arduino.</p>
+
+<h4>3. LED</h4>
+
+<p>Connect long lead to pin 4 on the Arduino and the short lead to a Green-Blue-Brown resistor connected to ground.</p>
+
+<h4>4. Play</h4>
+
+<p>Upload the <strong>copter</strong> program to the Arduino.</p>
+
+<h3>Bluetooth Setup</h3>
+
+<p>All instructions from here forwards will assume that the second Arduino board being used to run the Bluetooth stack is an Arduino Uno. Other Arduino boards can be used, but these instructions may need to be modified.</p>
+
+<h4>1. Arduino &amp; BLE Shield</h4>
+
+<ol>
+<li>Attach the RedBearLab BLE (Bluetooth Low Energy) shield to the Arduino Uno.</li>
+<li>Set the REQN and RDYN pins to 9 and 8, respectively.</li>
+<li>Connect TX (pin 1) from the Arduino Uno to RX3 (pin 15) on the Arduino Mega 2560 and RX (pin 0) to TX3 (pin 14)</li>
+<li>Upload the <strong>bt_transmitter</strong> program to the Uno.</li>
+</ol>
+
+
+<h4>2. CopterControl for iOS</h4>
+
+<ol>
+<li>Connect iOS device, open <strong>Xcode</strong>, and complete the device provisioning process by signing into your iOS Developer account.</li>
+<li>Open the <strong>CopterControl</strong> project and build &amp; run on your connected iOS device.</li>
+<li>Turh on Bluetooth on the iOS device and turn on both Arduinos. It will automatically detect and connect to the BLE board.</li>
+<li>No additional configuration required! Pressing the arrow button will function exactly like pressing the hardware button on the breadboard. <strong>BONUS:</strong> live updating score and persistent high score tracking.</li>
+</ol>
+
+</body>
+</html>
