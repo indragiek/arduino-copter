@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "bt_receiver.h"
 #include "colors.h"
+#include <EEPROM.h>
 
 // Uncomment to use the large 5" LCD instead of 1.8"
 // #define USE_LARGE_LCD
@@ -33,6 +34,11 @@ const int TFT_RST	= 8;
 const int BTN 		= 9;
 const int LED 		= 4;
 
+// =========== Constants ============
+
+// Random EEPROM address used to store the high scores.
+const int EEPROM_address = 254;
+
 // =========== Global Variables ============
 
 #ifdef USE_LARGE_LCD
@@ -41,9 +47,17 @@ Adafruit_RA8875 tft = Adafruit_RA8875(TFT_CS, TFT_RST);
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 #endif
 
+// Scene used to draw the game graphics.
 scene *s = NULL;
-boolean remote_btn_state = false; // State of the remotely controlled copter button.
-boolean remote_pause_state = false; // State of the remotely controlled play/pause button (true if paused).
+
+// State of the remotely controlled copter button.
+boolean remote_btn_state = false;
+
+// State of the remotely controlled play/pause button (true if paused).
+boolean remote_pause_state = false; 
+
+// High score loaded from EEPROM
+uint32_t high_score = 0;
 
 // =========== Function Definitions ============ 
 
@@ -55,8 +69,9 @@ static void run_game();
 
 // Shows the Game Over screen.
 //
-// @param score The game score to show.
-static void game_over(long score);
+// @param score 		The game score to show.
+// @param high_score 	The high score to show.
+static void game_over(long score, long high_score);
 
 // Show flashing text until the action button is pressed.
 //
@@ -69,6 +84,12 @@ static void flash_action_text(const char *s, g_point p, int size, int color);
 // Returns whether the button is pressed (either in hardware or
 // through the Bluetooth controller)
 static boolean is_button_down();
+
+// Returns high score read from the EEPROM.
+static long read_EEPROM_score();
+
+// Writes a high score to the EEPROM.
+static void write_EEPROM_score(uint32_t score);
 
 // Bluetooth callbacks
 void bt_button_press(BTButtonState state);
@@ -102,6 +123,7 @@ void setup() {
 	pinMode(BTN, INPUT);	
 	digitalWrite(BTN, HIGH);
 
+	high_score = read_EEPROM_score();
 	show_intro();
 	run_game();
 }
@@ -147,7 +169,7 @@ static void run_game() {
 	remote_pause_state = false;
 	remote_btn_state = false;
 	boolean collision = false;
-	long score = 0;
+	uint32_t score = 0;
 
 	while (collision == false) {
 		bt_receiver_update();
@@ -160,10 +182,14 @@ static void run_game() {
 			score++;
 		}
 	}
-	game_over(score);
+	if (score > high_score) {
+		high_score = score;
+		write_EEPROM_score(high_score);
+	}
+	game_over(score, high_score);
 }
 
-static void game_over(long score) {
+static void game_over(long score, long high_score) {
 	// Draw the Game Over title
 	tft.fillScreen(TFT_BLACK);
 	tft.setCursor(10, 40);
@@ -177,6 +203,8 @@ static void game_over(long score) {
 	tft.setTextColor(TFT_WHITE);
 	tft.print("Score: ");
 	tft.print(score);
+	tft.print("\n  High Score: ");
+	tft.print(high_score);
 
 	// Draw the text for retry
 	flash_action_text("Press button to\n        retry.", (g_point){20, 120}, 1, TFT_GREEN);
@@ -200,6 +228,29 @@ static void flash_action_text(const char *s, g_point p, int size, int color) {
 		}
 		visible = !visible;
 		delay(700);
+	}
+}
+
+static long read_EEPROM_score() {
+	const int byte_count = sizeof(uint32_t);
+  	uint8_t bytes[byte_count];
+  	uint32_t value = 0;
+	for (int i = 0; i < byte_count; i++) {
+		uint8_t byte = EEPROM.read(EEPROM_address + i);
+		if (i == 0 && byte == 255) return 0;
+		bytes[i] = byte;
+	}
+	for (int i = (byte_count - 1); i >= 0; i--) {
+		value <<= 8;;
+		value |= bytes[i];
+	}
+	return value;
+}
+
+static void write_EEPROM_score(uint32_t score) {
+	for (int i = 0; i < sizeof(uint32_t); i++) {
+		EEPROM.write(EEPROM_address + i, lowByte(score));
+		score >>= 8;
 	}
 }
 
