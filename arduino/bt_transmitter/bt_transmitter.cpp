@@ -30,7 +30,7 @@
 //    Byte sequence: 0x04
 
 void setup() {
-	Serial3.begin(9600);
+	Serial.begin(9600);
 	ble_begin();
 }
 
@@ -40,11 +40,11 @@ void loop() {
 
 	int num_bytes = ble_available();
 	for (int i = 0; i < num_bytes; i++) {
-		Serial3.write(ble_read());
+		Serial.write(ble_read());
 	}
 
-	num_bytes = Serial3.available();
+	num_bytes = Serial.available();
 	for (int i = 0; i < num_bytes; i++) {
-		ble_write(Serial3.read());
+		ble_write(Serial.read());
 	}
 }

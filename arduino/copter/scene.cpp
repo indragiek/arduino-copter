@@ -84,7 +84,7 @@ static const g_size copter_size = {3, 3};
 
 // Array of pixels to use for drawing the copter at an assumed
 // origin of {0, 0}
-static const g_point copter_pixels[] = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
+const g_point copter_pixels[] = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
 
 // =========== Macros ============
 
