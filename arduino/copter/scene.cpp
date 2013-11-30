@@ -86,15 +86,13 @@ static const g_point copter_pixels[] = {{0, 0}};
 // =========== Public API ============
 // All Public APIs are documented in scene.h
 
-scene * scene_new(Adafruit_ST7735 *tft, 
+scene * scene_new(Adafruit_GFX *tft,
+                  g_size tft_size, 
                   int spacing, 
                   int max_d, 
                   int blk_d, 
                   g_size blk_size,
                   scene_colors colors) {
-    // Create the scene structure and draw the initial scene.
-    g_size tft_size = (g_size){tft->width(), tft->height()};
-
     // Calculate maximum number of obstacle blocks that could be present on screen
     // at a given time in order to figure out how large to make the block_rects array.
     int max_blk = ceilf((float)tft_size.width / (float)(blk_size.width + blk_d)) * 2;
@@ -150,7 +148,7 @@ static void scene_redraw_frames(scene *s, gen_frame *new_frames) {
         int new_height = new_frame.top_height;
         int delta = new_height - old_height;
 
-        Adafruit_ST7735 *tft = s->tft;
+        Adafruit_GFX *tft = s->tft;
 
         // Fill or erase pixels from the top boundary depending on the
         // change in height (delta).
@@ -175,7 +173,7 @@ static void scene_redraw_frames(scene *s, gen_frame *new_frames) {
 }
 
 static void scene_initial_draw(scene *s) {
-    Adafruit_ST7735 *tft = s->tft;
+    Adafruit_GFX *tft = s->tft;
     tft->fillScreen(COL_BG(s));
 
     generator *gen = s->gen;

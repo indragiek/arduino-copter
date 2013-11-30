@@ -1,7 +1,7 @@
 TARGET = copter
 
 # Place your Arduino libs here! It's okay to not define this.
-ARDUINO_LIBS = SPI Adafruit_GFX Adafruit_ST7735 \
+ARDUINO_LIBS = SPI Adafruit_GFX Adafruit_ST7735 Adafruit_RA8875 \
 	Adafruit_SD Adafruit_SD/utility SD/utility
 
 # Either set this here or type `make upload BOARD_TAG=uno`

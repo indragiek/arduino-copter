@@ -5,21 +5,41 @@
 
 #include "scene.h"
 #include "bt_receiver.h"
+#include "colors.h"
+
+// Uncomment to use the large 5" LCD instead of 1.8"
+// #define USE_LARGE_LCD
+
+#ifdef USE_LARGE_LCD
+#include <Adafruit_RA8875.h>
+#else
+#include <Adafruit_ST7735.h>
+#endif
 
 // =========== Pin Configuration ============
 
 // SD Card and TFT Display
-const int SD_CS 	= 5;
+#ifdef USE_LARGE_LCD
+const int TFT_CS 	= 2;
+const int TFT_RST	= 3;
+const g_size TFT_SIZE = {480, 272};
+#else
 const int TFT_CS 	= 6;
 const int TFT_DC	= 7;
 const int TFT_RST	= 8;
+#endif
 
 // Buttons
 const int BTN 		= 9;
 
 // =========== Global Variables ============
 
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST); // TFT Display
+#ifdef USE_LARGE_LCD
+Adafruit_RA8875 tft = Adafruit_RA8875(TFT_CS, TFT_RST);
+#else
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+#endif
+
 scene *s; // Main scene
 boolean remote_btn_state = false; // State of the remotely controlled copter button.
 boolean remote_pause_state = false; // State of the remotely controlled play/pause button (true if paused).
@@ -44,7 +64,22 @@ void setup() {
 	BTCallbackFunctions functions = (BTCallbackFunctions){&bt_button_press, &bt_toggle_pause};
 	bt_receiver_init(functions);
 
+#ifdef USE_LARGE_LCD
+
+	// The native resolution of the LCD is actually 800x480, but there's
+	// a bug in the drivers that causes it not to work when this is specified
+	// as the resolution. Using 480x272 works properly.
+	//
+	// This is also the reason why the TFT_SIZE hardcode is required (because
+	// the tft.width() and tft.height() functions still return 800x480).
+	tft.begin(RA8875_480x272);
+	tft.displayOn(true);
+	tft.GPIOX(true);
+	tft.PWM1config(true, RA8875_PWM_CLK_DIV1024);
+	tft.PWM1out(255);
+#else
 	tft.initR(INITR_BLACKTAB);
+#endif
 	pinMode(BTN, INPUT);	
 	digitalWrite(BTN, HIGH);
 
@@ -53,7 +88,7 @@ void setup() {
 }
 
 static void show_intro() {
-	tft.fillScreen(ST7735_BLACK);
+	tft.fillScreen(TFT_BLACK);
 
 	// Draw the game title "Copter"
 	tft.setCursor(12, 40);
@@ -72,10 +107,10 @@ static void show_intro() {
 	while (digitalRead(BTN) == HIGH) {
 		if (visible) {
 			tft.setCursor(20, 120);
-			tft.setTextColor(ST7735_GREEN);
+			tft.setTextColor(TFT_GREEN);
 			tft.print("Press button to\n        begin.");
 		} else {
-			tft.fillRect(20, 120, 108, 40, ST7735_BLACK);
+			tft.fillRect(20, 120, 108, 40, TFT_BLACK);
 		}
 		visible = !visible;
 		delay(700);
@@ -86,11 +121,19 @@ static void run_game() {
 	if (s) free(s);
 
 	scene_colors colors;
-	colors.terrain = ST7735_GREEN;
-	colors.background = ST7735_BLACK;
-	colors.blocks = ST7735_YELLOW;
-	colors.copter = ST7735_RED;
-	s = scene_new(&tft, 100, 1, 125, (g_size){10, 25}, colors);
+	colors.terrain = TFT_GREEN;
+	colors.background = TFT_BLACK;
+	colors.blocks = TFT_YELLOW;
+	colors.copter = TFT_RED;
+#ifdef USE_LARGE_LCD
+
+	// We use a manual size override when testing on a large LCD because
+	// the library returns the incorrect size.
+	s = scene_new(&tft, TFT_SIZE, 200, 1, 125, (g_size){10, 25}, colors);
+#else
+	g_size tft_size = (g_size){tft.width(), tft.height()};
+	s = scene_new(&tft, tft_size, 100, 1, 125, (g_size){10, 25}, colors);
+#endif
 
 	bt_receiver_send_reset();
 	remote_pause_state = false;

@@ -12,8 +12,7 @@
 #ifndef __scene_h__
 #define __scene_h__
 #include <Arduino.h>
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7735.h> // Hardware-specific library
+#include <Adafruit_GFX.h>
 #include "generator.h"
 #include "geometry.h"
 
@@ -25,7 +24,7 @@ typedef struct {
 } scene_colors;
 
 typedef struct {
-    Adafruit_ST7735 *tft; 	// Display being drawn into.
+    Adafruit_GFX *tft;   	// Display being drawn into.
     generator *gen;			// Terrain generator.
     gen_frame *frames;		// Array of generator frames visible on screen.
     size_t num_frames;		// Length of `frames` array.
@@ -48,6 +47,7 @@ typedef enum {
 // Creates a new scene.
 //
 // @param tft       Pointer to the TFT display to draw the scene into.
+// @param tft_size  The size of the TFT to draw into.
 // @param spacing   The fixed spacing between the top and bottom boundaries.
 //                  In other words, the sum of the heights of the bottom and 
 //                  top boundaries will always be equal to height - spacing.
@@ -59,7 +59,8 @@ typedef enum {
 //
 // @return A pointer to the newly created `scene` struct.
 //
-scene * scene_new(Adafruit_ST7735 *tft, 
+scene * scene_new(Adafruit_GFX *tft,
+                  g_size tft_size, 
 	              int spacing, 
 	              int max_d, 
 	              int blk_d, 
