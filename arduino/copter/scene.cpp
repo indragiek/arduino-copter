@@ -333,7 +333,8 @@ static void scene_update_copter(scene *s, copter_direction dir) {
 }
 
 static void scene_redraw_copter(scene *s, int color) {
-    for (int i = 0; i < sizeof(copter_pixels); i++) {
+    int num_pixels = sizeof(copter_pixels) / sizeof(g_point);
+    for (int i = 0; i < num_pixels; i++) {
         g_point p = copter_pixels[i];
         p.x += s->copter_pos.x;
         p.y += s->copter_pos.y;

@@ -126,19 +126,12 @@ static void show_intro() {
 }
 
 static void run_game() {
-	if (s != NULL) {
-		Serial.println("Freeing old scene");
-		scene_free(s);
-		s = NULL;
-	}
-
+	if (s) scene_free(s);
 	scene_colors colors;
 	colors.terrain = TFT_GREEN;
 	colors.background = TFT_BLACK;
 	colors.blocks = TFT_YELLOW;
 	colors.copter = TFT_WHITE;
-
-	Serial.println("Creating new scene");
 #ifdef USE_LARGE_LCD
 
 	// We use a manual size override when testing on a large LCD because
