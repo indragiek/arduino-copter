@@ -119,6 +119,7 @@ scene * scene_new(Adafruit_GFX *tft,
     s->copter_pos = (g_point){10, (tft_size.height / 2) - (copter_size.height / 2)};
     s->copter_gravity = 0;
     s->copter_boost = 0;
+    s->collided = false;
     s->gen = gen_new(tft_size, spacing, max_d);
     scene_initial_draw(s);
     return s;
@@ -141,13 +142,12 @@ boolean scene_update(scene *s, copter_direction dir) {
     scene_update_copter(s, dir);
     g_point new_pos = s->copter_pos;
 
-    static boolean col = false;
     if (new_pos.y != old_pos.y) {
         scene_redraw_copter(s, COL_CPTR(s));
         g_rect copter_rect = (g_rect){s->copter_pos, copter_size};
-        col = scene_detect_collision(s, copter_rect);
+        s->collided = scene_detect_collision(s, copter_rect);
     }
-    return col;
+    return s->collided;
 }
 
 void scene_free(scene *s) {

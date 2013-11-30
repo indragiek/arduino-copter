@@ -37,6 +37,7 @@ typedef struct {
     g_point copter_pos;     // Current position of the helicopter;
     int copter_boost;       // Current copter boost level.
     int copter_gravity;     // Current copter gravity.
+    boolean collided;       // Whether the copter is in a state of collision.
 } scene;
 
 typedef enum {
