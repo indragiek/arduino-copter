@@ -47,17 +47,11 @@ Adafruit_RA8875 tft = Adafruit_RA8875(TFT_CS, TFT_RST);
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 #endif
 
-// Scene used to draw the game graphics.
-scene *s = NULL;
-
 // State of the remotely controlled copter button.
 boolean remote_btn_state = false;
 
 // State of the remotely controlled play/pause button (true if paused).
 boolean remote_pause_state = false; 
-
-// High score loaded from EEPROM
-uint32_t high_score = 0;
 
 // =========== Function Definitions ============ 
 
@@ -65,13 +59,16 @@ uint32_t high_score = 0;
 static void show_intro();
 
 // Runs the Copter game until the player loses.
-static void run_game();
+//
+// @param high_score Pointer to a high score to set and write
+// to EEPROM if the player beats it.
+static void run_game(uint32_t *high_score);
 
 // Shows the Game Over screen.
 //
 // @param score 		The game score to show.
-// @param high_score 	The high score to show.
-static void game_over(long score, long high_score);
+// @param high_score 	Pointer to the high score to show.
+static void game_over(uint32_t score, uint32_t *high_score);
 
 // Show flashing text until the action button is pressed.
 //
@@ -123,9 +120,9 @@ void setup() {
 	pinMode(BTN, INPUT);	
 	digitalWrite(BTN, HIGH);
 
-	high_score = read_EEPROM_score();
+	uint32_t high_score = read_EEPROM_score();
 	show_intro();
-	run_game();
+	run_game(&high_score);
 }
 
 static void show_intro() {
@@ -147,8 +144,7 @@ static void show_intro() {
 	flash_action_text("Press button to\n        begin.", (g_point){20, 120}, 1, TFT_GREEN);
 }
 
-static void run_game() {
-	if (s) scene_free(s);
+static void run_game(uint32_t *high_score) {
 	scene_colors colors;
 	colors.terrain = TFT_GREEN;
 	colors.background = TFT_BLACK;
@@ -158,10 +154,10 @@ static void run_game() {
 
 	// We use a manual size override when testing on a large LCD because
 	// the library returns the incorrect size.
-	s = scene_new(&tft, TFT_SIZE, 200, 1, 125, (g_size){10, 25}, colors);
+	scene *s = scene_new(&tft, TFT_SIZE, 200, 1, 125, (g_size){10, 25}, colors);
 #else
 	g_size tft_size = (g_size){tft.width(), tft.height()};
-	s = scene_new(&tft, tft_size, 100, 1, 75, (g_size){10, 25}, colors);
+	scene *s = scene_new(&tft, tft_size, 100, 1, 75, (g_size){10, 25}, colors);
 #endif
 
 	bt_receiver_send_reset();
@@ -182,14 +178,16 @@ static void run_game() {
 			score++;
 		}
 	}
-	if (score > high_score) {
-		high_score = score;
-		write_EEPROM_score(high_score);
+	scene_free(s);
+
+	if (score > *high_score) {
+		*high_score = score;
+		write_EEPROM_score(*high_score);
 	}
 	game_over(score, high_score);
 }
 
-static void game_over(long score, long high_score) {
+static void game_over(uint32_t score, uint32_t *high_score) {
 	// Draw the Game Over title
 	tft.fillScreen(TFT_BLACK);
 	tft.setCursor(10, 40);
@@ -204,11 +202,11 @@ static void game_over(long score, long high_score) {
 	tft.print("Score: ");
 	tft.print(score);
 	tft.print("\n  High Score: ");
-	tft.print(high_score);
+	tft.print(*high_score);
 
 	// Draw the text for retry
 	flash_action_text("Press button to\n        retry.", (g_point){20, 120}, 1, TFT_GREEN);
-	run_game();
+	run_game(high_score);
 }
 
 static boolean is_button_down() {
