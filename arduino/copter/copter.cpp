@@ -29,8 +29,9 @@ const int TFT_DC	= 7;
 const int TFT_RST	= 8;
 #endif
 
-// Buttons
+// Buttons and Lights
 const int BTN 		= 9;
+const int LED 		= 4;
 
 // =========== Global Variables ============
 
@@ -40,7 +41,7 @@ Adafruit_RA8875 tft = Adafruit_RA8875(TFT_CS, TFT_RST);
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 #endif
 
-scene *s; // Main scene
+scene *s = NULL;
 boolean remote_btn_state = false; // State of the remotely controlled copter button.
 boolean remote_pause_state = false; // State of the remotely controlled play/pause button (true if paused).
 
@@ -51,6 +52,23 @@ static void show_intro();
 
 // Runs the Copter game until the player loses.
 static void run_game();
+
+// Shows the Game Over screen.
+//
+// @param score The game score to show.
+static void game_over(long score);
+
+// Show flashing text until the action button is pressed.
+//
+// @param s 		The text to flash.
+// @param p 		Point at which to draw the text.
+// @param size 		The text size.
+// @param color 	The text color.
+static void flash_action_text(const char *s, g_point p, int size, int color);
+
+// Returns whether the button is pressed (either in hardware or
+// through the Bluetooth controller)
+static boolean is_button_down();
 
 // Bluetooth callbacks
 void bt_button_press(BTButtonState state);
@@ -80,6 +98,7 @@ void setup() {
 #else
 	tft.initR(INITR_BLACKTAB);
 #endif
+	pinMode(LED, OUTPUT);
 	pinMode(BTN, INPUT);	
 	digitalWrite(BTN, HIGH);
 
@@ -103,28 +122,23 @@ static void show_intro() {
 
 	// Draw the flashing "press button" text until
 	// the user pushes the button.
-	boolean visible = true;
-	while (digitalRead(BTN) == HIGH) {
-		if (visible) {
-			tft.setCursor(20, 120);
-			tft.setTextColor(TFT_GREEN);
-			tft.print("Press button to\n        begin.");
-		} else {
-			tft.fillRect(20, 120, 108, 40, TFT_BLACK);
-		}
-		visible = !visible;
-		delay(700);
-	}
+	flash_action_text("Press button to\n        begin.", (g_point){20, 120}, 1, TFT_GREEN);
 }
 
 static void run_game() {
-	if (s) free(s);
+	if (s != NULL) {
+		Serial.println("Freeing old scene");
+		scene_free(s);
+		s = NULL;
+	}
 
 	scene_colors colors;
 	colors.terrain = TFT_GREEN;
 	colors.background = TFT_BLACK;
 	colors.blocks = TFT_YELLOW;
 	colors.copter = TFT_WHITE;
+
+	Serial.println("Creating new scene");
 #ifdef USE_LARGE_LCD
 
 	// We use a manual size override when testing on a large LCD because
@@ -132,24 +146,69 @@ static void run_game() {
 	s = scene_new(&tft, TFT_SIZE, 200, 1, 125, (g_size){10, 25}, colors);
 #else
 	g_size tft_size = (g_size){tft.width(), tft.height()};
-	s = scene_new(&tft, tft_size, 100, 1, 125, (g_size){10, 25}, colors);
+	s = scene_new(&tft, tft_size, 100, 1, 75, (g_size){10, 25}, colors);
 #endif
 
 	bt_receiver_send_reset();
+
 	remote_pause_state = false;
 	remote_btn_state = false;
 	boolean collision = false;
+	long score = 0;
+
 	while (collision == false) {
 		bt_receiver_update();
 		if (remote_pause_state == false) {
-			boolean btn_down = (digitalRead(BTN) == LOW) || remote_btn_state;
+			boolean btn_down = is_button_down();
 			collision = scene_update(s, btn_down ? copter_up : copter_down);
+			digitalWrite(LED, btn_down ? HIGH : LOW);
+
 			bt_receiver_increment_score();
+			score++;
 		}
 	}
-	tft.fillScreen(TFT_BLACK);
+	game_over(score);
 }
 
+static void game_over(long score) {
+	// Draw the Game Over title
+	tft.fillScreen(TFT_BLACK);
+	tft.setCursor(10, 40);
+	tft.setTextSize(2);
+	tft.setTextColor(TFT_RED);
+	tft.print("Game Over");
+
+	// Draw the score
+	tft.setCursor(12, 80);
+	tft.setTextSize(1);
+	tft.setTextColor(TFT_WHITE);
+	tft.print("Score: ");
+	tft.print(score);
+
+	// Draw the text for retry
+	flash_action_text("Press button to\n        retry.", (g_point){20, 120}, 1, TFT_GREEN);
+	run_game();
+}
+
+static boolean is_button_down() {
+	return remote_btn_state || (digitalRead(BTN) == LOW);
+}
+
+static void flash_action_text(const char *s, g_point p, int size, int color) {
+	boolean visible = true;
+	while (is_button_down() == false) {
+		if (visible) {
+			tft.setCursor(p.x, p.y);
+			tft.setTextColor(color);
+			tft.setTextSize(size);
+			tft.print(s);
+		} else {
+			tft.fillRect(p.x, p.y, tft.width() - p.x, tft.height() - p.y, TFT_BLACK);
+		}
+		visible = !visible;
+		delay(700);
+	}
+}
 
 void bt_button_press(BTButtonState state) {
 	remote_btn_state = (state == BTButtonDown) ? true : false;
