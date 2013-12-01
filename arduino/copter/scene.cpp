@@ -80,11 +80,11 @@ static const int max_boost = 10;
 static const float damping_factor = 0.5;
 
 // Pixel size of the copter.
-static const g_size copter_size = {3, 3};
+static const g_size copter_size = {11, 6};
 
 // Array of pixels to use for drawing the copter at an assumed
 // origin of {0, 0}
-const g_point copter_pixels[] = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
+const g_point copter_pixels[] =  {{4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, {9, 0}, {10, 0},  {7, 1},  {2, 2}, {6, 2}, {7, 2}, {8, 2}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3}, {9, 3}, {2, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {6, 5}, {7, 5}, {8, 5}};
 
 // =========== Macros ============
 
@@ -137,14 +137,15 @@ boolean scene_update(scene *s, copter_direction dir) {
     scene_redraw_blocks(s);
     scene_update_blocks(s);
 
-    scene_redraw_copter(s, COL_BG(s));
     g_point old_pos = s->copter_pos;
     scene_update_copter(s, dir);
     g_point new_pos = s->copter_pos;
 
     if (new_pos.y != old_pos.y) {
+        g_rect copter_rect = (g_rect){old_pos, copter_size};
+        draw_rect(s->tft, copter_rect, COL_BG(s));
         scene_redraw_copter(s, COL_CPTR(s));
-        g_rect copter_rect = (g_rect){s->copter_pos, copter_size};
+        copter_rect = (g_rect){new_pos, copter_size};
         s->collided = scene_detect_collision(s, copter_rect);
     }
     return s->collided;
