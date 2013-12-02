@@ -67,25 +67,22 @@ static void scene_redraw_copter(scene *s, int color);
 
 // =========== Constants ============
 
+typedef struct {
+    int max;
+    float damping;
+} physics_unit;
+
 // Spacing between the edges of the terrain and the obstacle blocks.
 static const int block_edge_margin = 10;
 
-// Maximum value of gravity.
-static const int gravity_max = 5;
-
-// Maximum value of boost.
-static const int boost_max = 10;
-
-// Dampening factor for the copter gravity;
-static const float gravity_damping = 0.6;
-
-// Dampening factor for the copter boost.
-static const float boost_damping = 0.5;
+// Physics units (defined by max and damping) for gravity and boost.
+static const physics_unit gravity = {5, 0.6};
+static const physics_unit boost = {10, 0.5};
 
 // Pixel size of the copter.
 static const g_size copter_size = {11, 6};
 
-// Array of pixels to use for drawing the copter at an assumed
+// Array of pixels to use for drawing the copter body at an assumed
 // origin of {0, 0}
 const g_point copter_pixels[] =  {{4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, {9, 0}, {10, 0},  {7, 1},  {2, 2}, {6, 2}, {7, 2}, {8, 2}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3}, {9, 3}, {2, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {6, 5}, {7, 5}, {8, 5}};
 
@@ -322,18 +319,18 @@ static boolean scene_detect_collision(scene *s, g_rect r) {
 
 static void scene_update_copter(scene *s, copter_direction dir) {
     if (dir == copter_up) {
-        if (++s->copter_boost > boost_max) {
-            s->copter_boost = boost_max;
+        if (++s->copter_boost > boost.max) {
+            s->copter_boost = boost.max;
         }
     } else {
         if (--s->copter_boost < 0) {
             s->copter_boost = 0;
         }
     }
-    if (++s->copter_gravity > gravity_max) {
-        s->copter_gravity = gravity_max;
+    if (++s->copter_gravity > gravity.max) {
+        s->copter_gravity = gravity.max;
     }
-    s->copter_pos.y += (s->copter_gravity * gravity_damping) - (s->copter_boost * boost_damping);
+    s->copter_pos.y += (s->copter_gravity * gravity.damping) - (s->copter_boost * boost.damping);
 }
 
 static void scene_redraw_copter(scene *s, int color) {
