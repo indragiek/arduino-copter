@@ -59,4 +59,12 @@ typedef void (^CPTBluetoothDataBlock)(NSData *data);
  *  @param data The data to write.
  */
 - (void)write:(NSData *)data;
+
+/**
+ *  Writes bytes to the active (connected) peripheral
+ *
+ *  @param bytes The byte array.
+ *  @param len   The length of the byte array.
+ */
+- (void)writeBytes:(const unsigned char *)bytes length:(NSUInteger)len;
 @end

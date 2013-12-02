@@ -148,25 +148,19 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 - (IBAction)buttonDown:(id)sender
 {
 	const unsigned char bytes[] = {0x01, 0x01};
-	[self writeBytes:bytes len:2];
+	[self.bluetoothManager writeBytes:bytes length:2];
 }
 
 - (IBAction)buttonUp:(id)sender
 {
 	const unsigned char bytes[] = {0x01, 0x00};
-	[self writeBytes:bytes len:2];
+	[self.bluetoothManager writeBytes:bytes length:2];
 }
 
 - (IBAction)playPause:(UIButton *)sender
 {
 	const unsigned char bytes[] = {0x02};
-	[self writeBytes:bytes len:1];
-}
-
-- (void)writeBytes:(const unsigned char *)bytes len:(NSUInteger)len
-{
-	NSData *data = [NSData dataWithBytes:bytes length:len];
-	[self.bluetoothManager write:data];
+	[self.bluetoothManager writeBytes:bytes length:1];
 }
 
 @end

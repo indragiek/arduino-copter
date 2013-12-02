@@ -87,6 +87,12 @@ static NSString * const CPTBluetoothErrorDomain = @"CPTBluetoothErrorDomain";
 	[self.activePeripheral writeValue:data forCharacteristic:self.RXCharacteristic type:CBCharacteristicWriteWithoutResponse];
 }
 
+- (void)writeBytes:(const unsigned char *)bytes length:(NSUInteger)len
+{
+	NSData *data = [NSData dataWithBytes:bytes length:len];
+	[self write:data];
+}
+
 - (BOOL)checkCentralManagerStateWithError:(NSError **)error
 {
 	CBCentralManagerState state = self.manager.state;
