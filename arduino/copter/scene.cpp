@@ -5,7 +5,10 @@
 //
 
 #include "scene.h"
+#include "helicopter.h"
 #include "drawing_utils.h"
+
+// =========== Function Declarations ============
 
 // Clears the screen and draws the initial scene.
 //
@@ -59,19 +62,6 @@ static boolean scene_detect_collision(scene *s, g_rect r);
 // @param dir   The direction that the copter is moving in.
 static void scene_update_copter(scene *s, copter_direction dir);
 
-// Redraw the copter on screen.
-//
-// @param s         Pointer to the `scene` for which to redraw the copter.
-// @param color     The color to fill the copter with.
-static void scene_redraw_copter(scene *s, int color);
-
-// Draw a copter pixel adjusted for the current copter origin.
-//
-// @param s         Pointer to the `scene` for which to draw the pixel.
-// @param p         The point of the pixel to draw.
-// @param color     The color to fill the pixel with.
-static void scene_draw_copter_pixel(scene *s, g_point p, int color);
-
 // =========== Constants ============
 
 typedef struct {
@@ -85,21 +75,6 @@ static const int block_edge_margin = 10;
 // Physics units (defined by max and damping) for gravity and boost.
 static const physics_unit gravity = {5, 0.6};
 static const physics_unit boost = {10, 0.5};
-
-// Pixel size of the copter.
-static const g_size copter_size = {11, 6};
-
-// Array of pixels to use for drawing the copter body at an assumed
-// origin of {0, 0}
-static const g_point copter_body_pixels[] =  {{7, 1},  {2, 2}, {6, 2}, {7, 2}, {8, 2}, {1, 3}, {2, 3}, {3, 3}, {4, 3}, {5, 3}, {6, 3}, {7, 3}, {8, 3}, {9, 3}, {2, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {6, 5}, {7, 5}, {8, 5}};
-
-// Start and end X positions of the copter blade (used for animating the blade)
-static const g_point copter_blade_start = {4, 0};
-static const g_point copter_blade_end = {10, 0};
-
-// The number of frames before the direction of the blade switches when
-// the copter is animating.
-static const int copter_animation_frame_count = 1;
 
 // =========== Macros ============
 
@@ -131,7 +106,7 @@ scene * scene_new(Adafruit_GFX *tft,
     s->last_block_d = 0;
     s->block_size = blk_size;
     s->max_block_d = blk_d;
-    s->copter_pos = (g_point){10, (tft_size.height / 2) - (copter_size.height / 2)};
+    s->copter_pos = (g_point){10, (tft_size.height / 2) - (helicopter_size.height / 2)};
     s->copter_gravity = 0;
     s->copter_boost = 0;
     s->collided = false;
@@ -157,10 +132,10 @@ boolean scene_update(scene *s, copter_direction dir) {
     g_point new_pos = s->copter_pos;
 
     if (new_pos.y != old_pos.y) {
-        g_rect copter_rect = (g_rect){old_pos, copter_size};
+        g_rect copter_rect = (g_rect){old_pos, helicopter_size};
         draw_rect(s->tft, copter_rect, COL_BG(s));
-        scene_redraw_copter(s, COL_CPTR(s));
-        copter_rect = (g_rect){new_pos, copter_size};
+        helicopter_draw(s->tft, s->copter_pos, COL_CPTR(s));
+        copter_rect = (g_rect){new_pos, helicopter_size};
         s->collided = scene_detect_collision(s, copter_rect);
     }
     return s->collided;
@@ -331,7 +306,6 @@ static boolean scene_detect_collision(scene *s, g_rect r) {
     return col;
 }
 
-
 static void scene_update_copter(scene *s, copter_direction dir) {
     if (dir == copter_up) {
         if (++s->copter_boost > boost.max) {
@@ -346,34 +320,4 @@ static void scene_update_copter(scene *s, copter_direction dir) {
         s->copter_gravity = gravity.max;
     }
     s->copter_pos.y += (s->copter_gravity * gravity.damping) - (s->copter_boost * boost.damping);
-}
-
-static void scene_redraw_copter(scene *s, int color) {
-    int num_pixels = sizeof(copter_body_pixels) / sizeof(g_point);
-    for (int i = 0; i < num_pixels; i++) {
-        scene_draw_copter_pixel(s, copter_body_pixels[i], color);
-    }
-
-    const int half_blade = (copter_blade_end.x - copter_blade_start.x) / 2;
-    const int blade_y = copter_blade_start.y;
-    static int current_frame_count = 0;
-    static boolean left_blade = true;
-
-    if (++current_frame_count >= copter_animation_frame_count) {
-        current_frame_count = 0;
-        left_blade = !left_blade;
-    }
-    int start_x = copter_blade_start.x;
-    if (left_blade == false) {
-        start_x += half_blade;
-    }
-    for (int i = start_x; i < (start_x + half_blade + 1); i++) {
-        scene_draw_copter_pixel(s, (g_point){i, blade_y}, color);
-    }
-}
-
-static void scene_draw_copter_pixel(scene *s, g_point p, int color) {
-    p.x += s->copter_pos.x;
-    p.y += s->copter_pos.y;
-    draw_pixel(s->tft, p, color);
 }

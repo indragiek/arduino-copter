@@ -8,8 +8,8 @@
 //
 // See bt_transmitter.h for the spec.
 
-#ifndef __bluetooth_h__
-#define __bluetooth_h__
+#ifndef __btreceiver_h__
+#define __btreceiver_h__
 // The two possible button press states
 // BTButtonDown - When the button is pressed down.
 // BTButtonUp - When the button has been released.
