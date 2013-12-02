@@ -48,12 +48,9 @@ gen_frame gen_pop_frame(generator *g, gen_frame *new_frame) {
     // to the end of the generator's frame list.
     gen_frame *frames = g->frames;
     gen_frame f = frames[0];
-    size_t len = g->num_frames;
-    for (int i = 1; i < len; i++) {
-        frames[i - 1] = frames[i];
-    }
+    memmove(&frames[0], &frames[1], sizeof(frames) - sizeof(*frames));
     gen_frame f_new = gen_generate_next_frame(g);
-    frames[len - 1] = f_new;
+    frames[g->num_frames - 1] = f_new;
     if (new_frame) *new_frame = f_new;
     return f;
 }

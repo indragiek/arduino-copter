@@ -216,9 +216,7 @@ static gen_frame * scene_update_frames(scene *s) {
 
     // Shift all the other frames to the left and replace the last element
     // in the array with the newly created frame.
-    for (int i = 1; i < len; i++) {
-        frames[i - 1] = old_frames[i];
-    }
+    memmove(&frames[0], &frames[1], sizeof(frames) - sizeof(*frames));
     frames[len - 1] = new_frame;
     return frames;
 }
@@ -238,9 +236,7 @@ static void scene_update_blocks(scene *s) {
             // Otherwise assign the updated rect back to the original
             // position in the array.
             if (r.origin.x <= -(s->block_size.width)) {
-                for (int j = i + 1; j < len; j++) {
-                    rects[j - 1] = rects[j];
-                }
+                memmove(&rects[0], &rects[1], sizeof(rects) - sizeof(*rects));
                 len--;
                 s->num_blocks--;
             } else {
