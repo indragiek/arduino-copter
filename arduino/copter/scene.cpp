@@ -71,13 +71,16 @@ static void scene_redraw_copter(scene *s, int color);
 static const int block_edge_margin = 10;
 
 // Maximum value of gravity.
-static const int max_gravity = 5;
+static const int gravity_max = 5;
 
 // Maximum value of boost.
-static const int max_boost = 10;
+static const int boost_max = 10;
 
-// Dampening factor for the movement of the copter.
-static const float damping_factor = 0.5;
+// Dampening factor for the copter gravity;
+static const float gravity_damping = 0.6;
+
+// Dampening factor for the copter boost.
+static const float boost_damping = 0.5;
 
 // Pixel size of the copter.
 static const g_size copter_size = {11, 6};
@@ -319,18 +322,18 @@ static boolean scene_detect_collision(scene *s, g_rect r) {
 
 static void scene_update_copter(scene *s, copter_direction dir) {
     if (dir == copter_up) {
-        if (++s->copter_boost > max_boost) {
-            s->copter_boost = max_boost;
+        if (++s->copter_boost > boost_max) {
+            s->copter_boost = boost_max;
         }
     } else {
         if (--s->copter_boost < 0) {
             s->copter_boost = 0;
         }
     }
-    if (++s->copter_gravity > max_gravity) {
-        s->copter_gravity = max_gravity;
+    if (++s->copter_gravity > gravity_max) {
+        s->copter_gravity = gravity_max;
     }
-    s->copter_pos.y += (s->copter_gravity - s->copter_boost) * damping_factor;
+    s->copter_pos.y += (s->copter_gravity * gravity_damping) - (s->copter_boost * boost_damping);
 }
 
 static void scene_redraw_copter(scene *s, int color) {
