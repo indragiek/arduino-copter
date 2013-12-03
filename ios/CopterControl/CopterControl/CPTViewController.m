@@ -10,18 +10,17 @@
 #import "CPTBluetoothManager.h"
 #import "SVProgressHUD.h"
 
-static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
-
 @interface CPTViewController ()
 @property (nonatomic, strong, readonly) CPTBluetoothManager *bluetoothManager;
+@property (nonatomic, strong, readonly) NSMutableData *buffer;
+@property (nonatomic, assign) NSUInteger score;
+@property (nonatomic, assign) NSUInteger highScore;
+
 @property (nonatomic, weak) IBOutlet UILabel *scoreLabel;
 @property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
 @property (nonatomic, weak) IBOutlet UIView *scoreHeaderView;
 @property (nonatomic, weak) IBOutlet UIView *highScoreHeaderView;
 @property (nonatomic, weak) IBOutlet UIButton *playPauseButton;
-
-@property (nonatomic, assign) NSUInteger score;
-@property (nonatomic, assign) NSUInteger highScore;
 
 - (IBAction)buttonDown:(id)sender;
 - (IBAction)buttonUp:(id)sender;
@@ -31,18 +30,43 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 @implementation CPTViewController
 @synthesize bluetoothManager = _bluetoothManager;
 
+#pragma mark - Initialization
+
+- (void)commonInitForCPTViewController
+{
+	_buffer = [NSMutableData data];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+		[self commonInitForCPTViewController];
+	}
+	return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+	if ((self = [super initWithCoder:aDecoder])) {
+		[self commonInitForCPTViewController];
+	}
+	return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	self.view.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
 	self.score = 0;
-	self.highScore = [[NSUserDefaults.standardUserDefaults objectForKey:CPTUserDefaultsHighScoreKey] unsignedIntegerValue];
+	self.highScore = 0;
 
 	// Defer to next iteration of the run loop.
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self scanBluetoothDevices];
 	});
 }
+
+#pragma mark - Bluetooth
 
 - (void)scanBluetoothDevices
 {
@@ -106,20 +130,49 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 // 4) SEND: Game reset signal.
 //    Byte sequence: 0x03
 //
-// 3) SEND: Increment score by 1pt.
-//    Byte sequence: 0x04
+// 5) SEND: Update score.
+//    Byte sequence: 0x04 <32 bit integer>
 //
+// 6) SEND: Update high score.
+//    Byte sequence: 0x05 <32 bit integer>
+//
+
 - (void)handleReceivedData:(NSData *)data
 {
+	[self.buffer appendData:data];
+	
 	unsigned char byte;
-	[data getBytes:&byte length:1];
-	if (byte == 0x04) {
-		self.score++;
-		int score = 
-	} else if (byte == 0x03) {
-		self.playPauseButton.selected = NO;
-		self.score = 0;
+	const NSRange byteRange = NSMakeRange(0, 1);
+	[self.buffer getBytes:&byte range:byteRange];
+	BOOL score = (byte == 0x04);
+	BOOL highScore = (byte == 0x05);
+	
+	if (score || highScore) {
+		const int totalLength = sizeof(uint32_t) + 1;
+		if (self.buffer.length >= totalLength) {
+			uint32_t val = [self readUInt32FromBuffer];
+			if (score) {
+				self.score = val;
+			} else {
+				self.highScore = val;
+			}
+		}
+	} else {
+		if (byte == 0x03) {
+			self.playPauseButton.selected = NO;
+			self.score = 0;
+		}
+		self.buffer.length = 0;
 	}
+}
+
+- (uint32_t)readUInt32FromBuffer
+{
+	const size_t size = sizeof(uint32_t);
+	uint32_t score;
+	[self.buffer getBytes:&score range:NSMakeRange(1, size)];
+	[self.buffer replaceBytesInRange:NSMakeRange(0, size + 1) withBytes:NULL length:0];
+	return score;
 }
 
 #pragma mark - Accessors
@@ -142,7 +195,6 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 {
 	_highScore = highScore;
 	self.highScoreLabel.text = @(highScore).stringValue;
-	[NSUserDefaults.standardUserDefaults setObject:@(highScore) forKey:CPTUserDefaultsHighScoreKey];
 }
 
 #pragma mark - Actions
