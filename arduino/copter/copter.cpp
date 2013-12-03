@@ -21,23 +21,23 @@
 
 // SD Card and TFT Display
 #ifdef USE_LARGE_LCD
-const int TFT_CS 	= 2;
-const int TFT_RST	= 3;
-const g_size TFT_SIZE = {480, 272};
+static const int TFT_CS 	= 2;
+static const int TFT_RST	= 3;
+static const g_size TFT_SIZE = {480, 272};
 #else
-const int TFT_CS 	= 6;
-const int TFT_DC	= 7;
-const int TFT_RST	= 8;
+static const int TFT_CS 	= 6;
+static const int TFT_DC	= 7;
+static const int TFT_RST	= 8;
 #endif
 
 // Buttons and Lights
-const int BTN 		= 9;
-const int LED 		= 4;
+static const int BTN 		= 9;
+static const int LED 		= 4;
 
 // =========== Constants ============
 
 // Random EEPROM address used to store the high scores.
-const int EEPROM_address = 254;
+static const int EEPROM_address = 254;
 
 // =========== Global Variables ============
 
