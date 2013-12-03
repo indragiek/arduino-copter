@@ -6,7 +6,26 @@
 // Sends and receives Bluetooth commands over the serial port from
 // another Arduino connected to the BLE shield.
 //
-// See bt_transmitter.h for the spec.
+// ======== Specification ========
+//
+// This specification defines the communication protocol used by copter to
+// exchange data between the game and an external controller device. The
+// following commands are implemented:
+//
+// 1) RECEIVE: Button Press Down
+//    Byte sequence: 0x01 0x0`
+//
+// 2) RECEIVE: Button Press Up
+//    Byte sequence: 0x01 0x00
+//
+// 3) RECEIVE: Toggle play/pause
+//    Byte sequence: 0x02
+//
+// 4) SEND: Game reset signal.
+//    Byte sequence: 0x03
+//
+// 3) SEND: Increment score by 1pt.
+//    Byte sequence: 0x04
 
 #ifndef __btreceiver_h__
 #define __btreceiver_h__

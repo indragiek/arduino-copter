@@ -163,7 +163,6 @@ static void run_game(uint32_t *high_score) {
 	bt_receiver_send_reset();
 
 	remote_pause_state = false;
-	remote_btn_state = false;
 	boolean collision = false;
 	uint32_t score = 0;
 
@@ -188,6 +187,8 @@ static void run_game(uint32_t *high_score) {
 }
 
 static void game_over(uint32_t score, uint32_t *high_score) {
+	remote_btn_state = false;
+	
 	// Draw the Game Over title
 	tft.fillScreen(TFT_BLACK);
 	tft.setCursor(10, 40);
@@ -268,7 +269,6 @@ void bt_button_press(BTButtonState state) {
 }
 
 void bt_toggle_pause() {
-	Serial.print("Got bt callback");
 	remote_pause_state = !remote_pause_state;
 }
 

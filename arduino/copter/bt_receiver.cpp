@@ -21,13 +21,17 @@ void bt_receiver_update() {
 	int num_bytes = Serial3.available();
 	if (num_bytes == 0) return;
 
-	int header = Serial3.read();
+	int header = Serial3.peek();
 	if (header == 0x01 && callbacks.button) { // Button up/down command
-		if (num_bytes < 2) return;
-		BTButtonState state = (BTButtonState)Serial3.read();
-		callbacks.button(state);
+		if (num_bytes >= 2) {
+			Serial3.read(); // Flush header from the Serial buffer
+			callbacks.button((BTButtonState)Serial3.read());
+		}
 	} else if (header == 0x02 && callbacks.toggle) {
+		Serial3.read();
 		callbacks.toggle();
+	} else {
+		Serial3.read();
 	}
 }
 
