@@ -1,8 +1,7 @@
 TARGET = bt_transmitter
 
 # Place your Arduino libs here! It's okay to not define this.
-ARDUINO_LIBS = SPI Adafruit_GFX Adafruit_ST7735 \
-	Adafruit_SD Adafruit_SD/utility SD/utility Nordic_BLE RBL_BLEShield
+ARDUINO_LIBS = SPI SoftwareSerial Nordic_BLE RBL_BLEShield
 
 # Either set this here or type `make upload BOARD_TAG=uno`
 BOARD_TAG = uno

@@ -6,9 +6,12 @@
 // Does Bluetooth I/O over Serial port.
 
 #include <ble_shield.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial BLESerial(6, 7); // RX, TX
 
 void setup() {
-	Serial.begin(9600);
+	BLESerial.begin(9600);
 	ble_begin();
 }
 
@@ -17,9 +20,9 @@ void loop() {
 	if (!ble_connected()) return;
 
 	while (ble_available()) {
-		Serial.write(ble_read());
+		BLESerial.write(ble_read());
 	}
-	while (Serial.available()) {
-		ble_write(Serial.read());
+	while (BLESerial.available()) {
+		ble_write(BLESerial.read());
 	}
 }
