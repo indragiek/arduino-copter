@@ -10,8 +10,6 @@
 #import "CPTBluetoothManager.h"
 #import "SVProgressHUD.h"
 
-static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
-
 @interface CPTViewController ()
 @property (nonatomic, strong, readonly) CPTBluetoothManager *bluetoothManager;
 @property (nonatomic, strong, readonly) NSMutableData *buffer;
@@ -60,7 +58,7 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
     [super viewDidLoad];
 	self.view.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
 	self.score = 0;
-	self.highScore = [[NSUserDefaults.standardUserDefaults objectForKey:CPTUserDefaultsHighScoreKey] unsignedIntegerValue];
+	self.highScore = 0;
 
 	// Defer to next iteration of the run loop.
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -132,9 +130,13 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 // 4) SEND: Game reset signal.
 //    Byte sequence: 0x03
 //
-// 3) SEND: Update score.
+// 5) SEND: Update score.
 //    Byte sequence: 0x04 <32 bit integer>
 //
+// 6) SEND: Update high score.
+//    Byte sequence: 0x05 <32 bit integer>
+//
+
 - (void)handleReceivedData:(NSData *)data
 {
 	[self.buffer appendData:data];
@@ -142,19 +144,25 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	unsigned char byte;
 	const NSRange byteRange = NSMakeRange(0, 1);
 	[self.buffer getBytes:&byte range:byteRange];
-	if (byte == 0x04) {
+	BOOL score = (byte == 0x04);
+	BOOL highScore = (byte == 0x05);
+	
+	if (score || highScore) {
 		const int totalLength = sizeof(uint32_t) + 1;
 		if (self.buffer.length >= totalLength) {
-			self.score = [self readUInt32FromBuffer];
+			uint32_t val = [self readUInt32FromBuffer];
+			if (score) {
+				self.score = val;
+			} else {
+				self.highScore = val;
+			}
 		}
-	} else if (byte == 0x03) {
-		self.playPauseButton.selected = NO;
-		self.score = 0;
-		[self removeBytesInRangeFromBuffer:byteRange];
 	} else {
-		// Clear out the entire buffer because we have some garbage data.
-		// This probably isn't the best way to handle this...
-		[self.buffer setData:[NSData data]];
+		if (byte == 0x03) {
+			self.playPauseButton.selected = NO;
+			self.score = 0;
+		}
+		self.buffer.length = 0;
 	}
 }
 
@@ -163,13 +171,8 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	const size_t size = sizeof(uint32_t);
 	uint32_t score;
 	[self.buffer getBytes:&score range:NSMakeRange(1, size)];
-	[self removeBytesInRangeFromBuffer:NSMakeRange(0, size + 1)];
+	[self.buffer replaceBytesInRange:NSMakeRange(0, size + 1) withBytes:NULL length:0];
 	return score;
-}
-
-- (void)removeBytesInRangeFromBuffer:(NSRange )range
-{
-	[self.buffer replaceBytesInRange:range withBytes:NULL length:0];
 }
 
 #pragma mark - Accessors
@@ -192,7 +195,6 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 {
 	_highScore = highScore;
 	self.highScoreLabel.text = @(highScore).stringValue;
-	[NSUserDefaults.standardUserDefaults setObject:@(highScore) forKey:CPTUserDefaultsHighScoreKey];
 }
 
 #pragma mark - Actions

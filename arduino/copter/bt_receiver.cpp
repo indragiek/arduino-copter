@@ -9,6 +9,14 @@
 
 static BTCallbackFunctions callbacks;
 
+// =========== Function Declarations ============
+
+// Sends a 32-bit unsigned integer over the serial port by breaking
+// it up into 4 8-bit integers.
+//
+// @param n The 32-bit integer to send.
+static void bt_receiver_send_uint32(uint32_t n);
+
 // =========== Public API ============
 // All Public APIs are documented in bt_receiver.
 
@@ -41,8 +49,19 @@ void bt_receiver_send_reset() {
 
 void bt_receiver_send_score(uint32_t score) {
 	Serial3.write(0x04);
+	bt_receiver_send_uint32(score);
+}
+
+void bt_receiver_send_high_score(uint32_t high_score) {
+	Serial3.write(0x05);
+	bt_receiver_send_uint32(high_score);
+}
+
+// =========== Private API ============
+
+static void bt_receiver_send_uint32(uint32_t n) {
 	for (int i = 0; i < sizeof(uint32_t); i++) {
-    	Serial3.write(lowByte(score));
-    	score >>= 8;
+    	Serial3.write(lowByte(n));
+    	n >>= 8;
   	}
 }

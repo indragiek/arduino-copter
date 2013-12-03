@@ -121,6 +121,7 @@ void setup() {
 	digitalWrite(BTN, HIGH);
 
 	uint32_t high_score = read_EEPROM_score();
+	bt_receiver_send_high_score(high_score);
 	show_intro();
 	run_game(&high_score);
 }
@@ -164,6 +165,7 @@ static void run_game(uint32_t *high_score) {
 	// Send the reset signal to the Bluetooth receiver to let it know that 
 	// a new game has started.
 	bt_receiver_send_reset();
+	bt_receiver_send_high_score(*high_score);
 
 	// Reset a bunch of game-related state variables back to their initial
 	// state.
@@ -213,6 +215,7 @@ static void run_game(uint32_t *high_score) {
 	// might not have the most up to date score at the end of the game, so that's taken
 	// care of here.
 	bt_receiver_send_score(score);
+	bt_receiver_send_high_score(*high_score);
 
 	// Show game over screen.
 	game_over(score, high_score);
