@@ -39,6 +39,10 @@ void bt_receiver_send_reset() {
 	Serial3.write(0x03);
 }
 
-void bt_receiver_increment_score() {
+void bt_receiver_send_score(uint32_t score) {
 	Serial3.write(0x04);
+	for (int i = 0; i < sizeof(uint32_t); i++) {
+    	Serial3.write(lowByte(score));
+    	score >>= 8;
+  	}
 }

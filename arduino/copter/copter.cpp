@@ -172,8 +172,6 @@ static void run_game(uint32_t *high_score) {
 			boolean btn_down = is_button_down();
 			collision = scene_update(s, btn_down ? copter_up : copter_down);
 			digitalWrite(LED, btn_down ? HIGH : LOW);
-
-			bt_receiver_increment_score();
 			score++;
 		}
 	}
@@ -188,6 +186,7 @@ static void run_game(uint32_t *high_score) {
 
 static void game_over(uint32_t score, uint32_t *high_score) {
 	remote_btn_state = false;
+	bt_receiver_send_score(score);
 	
 	// Draw the Game Over title
 	tft.fillScreen(TFT_BLACK);
