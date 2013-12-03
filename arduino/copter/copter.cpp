@@ -145,6 +145,7 @@ static void show_intro() {
 }
 
 static void run_game(uint32_t *high_score) {
+	// Set up a new scene using a selected set of colors.
 	scene_colors colors;
 	colors.terrain = TFT_GREEN;
 	colors.background = TFT_BLACK;
@@ -160,34 +161,64 @@ static void run_game(uint32_t *high_score) {
 	scene *s = scene_new(&tft, tft_size, 100, 1, 75, (g_size){10, 25}, colors);
 #endif
 
+	// Send the reset signal to the Bluetooth receiver to let it know that 
+	// a new game has started.
 	bt_receiver_send_reset();
 
+	// Reset a bunch of game-related state variables back to their initial
+	// state.
 	remote_pause_state = false;
 	boolean collision = false;
 	uint32_t score = 0;
 
+	// Bluetooth I/O here has to be limited to avoid making the game lag. Instead
+	// of sending the score on every loop iteration, we rate limit it to only send
+	// every X iterations to the point where it doesn't induce any noticeable
+	// lag in gameplay.
+	const int score_rate_limit = 20;
+	int score_rate = 0;
+
+	// Continue updating the game scene until a collision has occurred.
 	while (collision == false) {
-		bt_receiver_update();
+		bt_receiver_update(); // 
 		if (remote_pause_state == false) {
 			boolean btn_down = is_button_down();
 			collision = scene_update(s, btn_down ? copter_up : copter_down);
-			digitalWrite(LED, btn_down ? HIGH : LOW);
+			digitalWrite(LED, btn_down ? HIGH : LOW); // Light up the LED according to button press.
+
 			score++;
+			score_rate++;
+			if (score_rate >= score_rate_limit) {
+				bt_receiver_send_score(score);
+				score_rate = 0;
+			}
 		}
 	}
 	scene_free(s);
 
+	// New high scores are written to the EEPROM where they are persisted across
+	// Arduino resets. We are careful to write only when the high score has changed
+	// because the EEPROM has a limit of 100,000 write/erase cycles.
 	if (score > *high_score) {
 		*high_score = score;
 		write_EEPROM_score(*high_score);
 	}
+
+	// If the user was pressing the button when the game ended, we don't want to throw
+	// them right back into another game before the game over screen has a chance to be
+	// displayed, so we manually override the button state.
+	remote_btn_state = false;
+
+	// Since the score updates only X iterations when the game is ongoing, the BT receiver
+	// might not have the most up to date score at the end of the game, so that's taken
+	// care of here.
+	bt_receiver_send_score(score);
+
+	// Show game over screen.
 	game_over(score, high_score);
 }
 
 static void game_over(uint32_t score, uint32_t *high_score) {
-	remote_btn_state = false;
-	bt_receiver_send_score(score);
-	
 	// Draw the Game Over title
 	tft.fillScreen(TFT_BLACK);
 	tft.setCursor(10, 40);
@@ -210,6 +241,8 @@ static void game_over(uint32_t score, uint32_t *high_score) {
 }
 
 static boolean is_button_down() {
+	// Return true when either the hardware button or the software button on the
+	// Bluetooth controller is being pressed.
 	return (remote_btn_state == true) || (digitalRead(BTN) == LOW);
 }
 
