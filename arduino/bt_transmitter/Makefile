@@ -5,7 +5,7 @@ ARDUINO_LIBS = SPI Adafruit_GFX Adafruit_ST7735 \
 	Adafruit_SD Adafruit_SD/utility SD/utility Nordic_BLE RBL_BLEShield
 
 # Either set this here or type `make upload BOARD_TAG=uno`
-BOARD_TAG = mega2560 
+BOARD_TAG = uno
 
 # if there is a ARDUINO_UA_ROOT environment variable, it defines the
 # root of the arduino_ua install.  If not, we assume it is in HOME
