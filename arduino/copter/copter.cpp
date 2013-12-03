@@ -215,7 +215,7 @@ static boolean is_button_down() {
 }
 
 static void flash_action_text(const char *s, g_point p, int size, int color) {
-	boolean visible = true;
+	boolean visible = false;
 	// Number of loop iterations before the visibility of the text changes.
 	// This is used instead of delay() to allow the Bluetooth receiver to update
 	// quickly during the loop without blocking it.
@@ -223,7 +223,7 @@ static void flash_action_text(const char *s, g_point p, int size, int color) {
 	// Unfortunately this means that the time interval at which the switch occurs
 	// will vary between processor clock speeds. 
 	const long blink_switch_count = 40000;
-	long blink_current_count = 0;
+	long blink_current_count = blink_switch_count;
 	while (is_button_down() == false) {
 		if (++blink_current_count >= blink_switch_count) {
 			visible = !visible;
