@@ -115,8 +115,10 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	[data getBytes:&byte length:1];
 	if (byte == 0x04) {
 		self.score++;
+		int score = 
 	} else if (byte == 0x03) {
-		self.playPauseButton.selected = !self.playPauseButton.selected;
+		self.playPauseButton.selected = NO;
+		self.score = 0;
 	}
 }
 
@@ -159,6 +161,7 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 
 - (IBAction)playPause:(UIButton *)sender
 {
+	sender.selected = !sender.selected;
 	const unsigned char bytes[] = {0x02};
 	[self.bluetoothManager writeBytes:bytes length:1];
 }
