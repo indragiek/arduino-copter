@@ -8,10 +8,13 @@
 #include <ble_shield.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial BLESerial(6, 7); // RX, TX
+static const int RX_PIN = 6;
+static const int TX_PIN = 7;
+
+SoftwareSerial BLESerial(RX_PIN, TX_PIN); // RX, TX
 
 void setup() {
-	BLESerial.begin(9600);
+	BLESerial.begin(57600);
 	ble_begin();
 }
 
