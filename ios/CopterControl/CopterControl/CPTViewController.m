@@ -156,15 +156,8 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 - (uint32_t)readUInt32FromBuffer
 {
 	const size_t size = sizeof(uint32_t);
-	uint8_t bytes[size];
-	[self.buffer getBytes:bytes range:NSMakeRange(1, size)];
-	for (NSInteger i = 0; i < size; i++) {
-		printf("%u ", bytes[i]);
-	}
-	puts("\n");
-	NSData *scoreData = [NSData dataWithBytes:bytes length:size];
 	uint32_t score;
-	[scoreData getBytes:&score length:size];
+	[self.buffer getBytes:&score range:NSMakeRange(1, size)];
 	[self.buffer replaceBytesInRange:NSMakeRange(0, size + 1) withBytes:NULL length:0];
 	return score;
 }
