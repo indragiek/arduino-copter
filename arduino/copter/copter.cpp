@@ -210,22 +210,33 @@ static void game_over(uint32_t score, uint32_t *high_score) {
 }
 
 static boolean is_button_down() {
-	return remote_btn_state || (digitalRead(BTN) == LOW);
+	return (remote_btn_state == true) || (digitalRead(BTN) == LOW);
 }
 
 static void flash_action_text(const char *s, g_point p, int size, int color) {
 	boolean visible = true;
+	// Number of loop iterations before the visibility of the text changes.
+	// This is used instead of delay() to allow the Bluetooth receiver to update
+	// quickly during the loop without blocking it.
+	//
+	// Unfortunately this means that the time interval at which the switch occurs
+	// will vary between processor clock speeds. 
+	const long blink_switch_count = 40000;
+	long blink_current_count = 0;
 	while (is_button_down() == false) {
-		if (visible) {
-			tft.setCursor(p.x, p.y);
-			tft.setTextColor(color);
-			tft.setTextSize(size);
-			tft.print(s);
-		} else {
-			tft.fillRect(p.x, p.y, tft.width() - p.x, tft.height() - p.y, TFT_BLACK);
+		if (++blink_current_count >= blink_switch_count) {
+			visible = !visible;
+			blink_current_count = 0;
+			if (visible) {
+				tft.setCursor(p.x, p.y);
+				tft.setTextColor(color);
+				tft.setTextSize(size);
+				tft.print(s);
+			} else {
+				tft.fillRect(p.x, p.y, tft.width() - p.x, tft.height() - p.y, TFT_BLACK);
+			}
 		}
-		visible = !visible;
-		delay(700);
+		bt_receiver_update();
 	}
 }
 
@@ -257,6 +268,7 @@ void bt_button_press(BTButtonState state) {
 }
 
 void bt_toggle_pause() {
+	Serial.print("Got bt callback");
 	remote_pause_state = !remote_pause_state;
 }
 
