@@ -140,7 +140,8 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	[self.buffer appendData:data];
 	
 	unsigned char byte;
-	[self.buffer getBytes:&byte length:1];
+	const NSRange byteRange = NSMakeRange(0, 1);
+	[self.buffer getBytes:&byte range:byteRange];
 	if (byte == 0x04) {
 		const int totalLength = sizeof(uint32_t) + 1;
 		if (self.buffer.length >= totalLength) {
@@ -149,7 +150,11 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	} else if (byte == 0x03) {
 		self.playPauseButton.selected = NO;
 		self.score = 0;
-		[self.buffer replaceBytesInRange:NSMakeRange(0, 1) withBytes:NULL length:0];
+		[self removeBytesInRangeFromBuffer:byteRange];
+	} else {
+		// Clear out the entire buffer because we have some garbage data.
+		// This probably isn't the best way to handle this...
+		[self.buffer setData:[NSData data]];
 	}
 }
 
@@ -158,8 +163,13 @@ static NSString * const CPTUserDefaultsHighScoreKey = @"HighScore";
 	const size_t size = sizeof(uint32_t);
 	uint32_t score;
 	[self.buffer getBytes:&score range:NSMakeRange(1, size)];
-	[self.buffer replaceBytesInRange:NSMakeRange(0, size + 1) withBytes:NULL length:0];
+	[self removeBytesInRangeFromBuffer:NSMakeRange(0, size + 1)];
 	return score;
+}
+
+- (void)removeBytesInRangeFromBuffer:(NSRange )range
+{
+	[self.buffer replaceBytesInRange:range withBytes:NULL length:0];
 }
 
 #pragma mark - Accessors
