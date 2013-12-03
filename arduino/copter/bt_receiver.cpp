@@ -14,7 +14,7 @@ static BTCallbackFunctions callbacks;
 
 void bt_receiver_init(BTCallbackFunctions functions) {
 	callbacks = functions;
-	Serial3.begin(57600);
+	Serial3.begin(9600);
 }
 
 void bt_receiver_update() {
