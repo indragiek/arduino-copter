@@ -162,27 +162,31 @@ sup {
 
 <h3>Project Directory Structure</h3>
 
+<p>Wiring diagrams and board images for both the basic and optional Bluetooth-enabled configurations are provided in the root of the project directory.</p>
+
 <ul>
 <li><strong>arduino</strong>
 
 <ul>
 <li><strong>copter</strong> - Game code to be run on primary Arduino</li>
-<li><strong>bt_transmitter</strong> - Bluetooth code to be run on secondary Arduino</li>
-<li><strong>lib</strong>
+<li><em>bt_transmitter</em> - Bluetooth code to be run on secondary Arduino</li>
+<li><em>lib</em>
 
 <ul>
-<li><strong>BLEShield</strong> - Libraries for RedBearLab BLE shield.</li>
+<li><em>BLEShield</em> - Libraries for RedBearLab BLE shield.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><strong>ios</strong>
+<li><p><em>ios</em></p>
 
 <ul>
-<li><strong>CopterControl</strong> - Source code for the iOS controller app.</li>
-<li><strong>External</strong> - Once git submodules have been initialized and cloned, contains 3rd party dependencies used in the iOS project (see below)</li>
+<li><em>CopterControl</em> - Source code for the iOS controller app.</li>
+<li><em>External</em> - Once git submodules have been    initialized and cloned, contains 3rd party
+dependencies used in the iOS project (see below)</li>
 </ul>
 </li>
+<li><p><em>fritzing</em> - Diagram source files for use with <a href="http://fritzing.org/">Fritzing</a> software.</p></li>
 </ul>
 
 
@@ -192,7 +196,7 @@ sup {
 git submodule update --init --recursive
 </code></pre>
 
-<p>The libraries needed to run the Bluetooth board can be found in <strong>arduino/libs</strong> or downloaded directly from the manufacturer's web site.</p>
+<p>The libraries needed to run the Bluetooth board can be found in <strong>arduino/lib</strong> or downloaded directly from the manufacturer's web site.</p>
 
 <h3>Parts</h3>
 
@@ -244,9 +248,9 @@ git submodule update --init --recursive
 
 <h4>4. Play</h4>
 
-<p>Upload the <strong>copter</strong> program to the Arduino.</p>
+<p>Upload the <strong>copter</strong> program (from the <strong>/arduino/copter</strong> folder) to the Arduino.</p>
 
-<h3>Bluetooth Setup</h3>
+<h3>Bluetooth Setup (OPTIONAL)</h3>
 
 <p>All instructions from here forwards will assume that the second Arduino board being used to run the Bluetooth stack is an Arduino Uno. Other Arduino boards can be used, but these instructions may need to be modified.</p>
 
@@ -255,8 +259,8 @@ git submodule update --init --recursive
 <ol>
 <li>Attach the RedBearLab BLE (Bluetooth Low Energy) shield to the Arduino Uno.</li>
 <li>Set the REQN and RDYN pins to 9 and 8, respectively.</li>
-<li>Connect TX (pin 1) from the Arduino Uno to RX3 (pin 15) on the Arduino Mega 2560 and RX (pin 0) to TX3 (pin 14)</li>
-<li>Upload the <strong>bt_transmitter</strong> program to the Uno.</li>
+<li>Connect TX (pin 7) from the Arduino Uno to RX3 (pin 15) on the Arduino Mega 2560 and RX (pin 6) to TX3 (pin 14)</li>
+<li>Upload the <strong>bt_transmitter</strong> program (from the <strong>/arduino/bt_transmitter</strong> folder) to the Uno.</li>
 </ol>
 
 

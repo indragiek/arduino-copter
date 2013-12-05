@@ -61,7 +61,7 @@ void bt_receiver_send_high_score(uint32_t high_score) {
 
 static void bt_receiver_send_uint32(uint32_t n) {
 	for (int i = 0; i < sizeof(uint32_t); i++) {
-    	Serial3.write(lowByte(n));
-    	n >>= 8;
-  	}
+		Serial3.write(lowByte(n));
+		n >>= 8;
+	}
 }
